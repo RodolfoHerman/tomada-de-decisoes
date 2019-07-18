@@ -1,6 +1,9 @@
 package br.com.rodolfo.trabalho;
 
+import java.io.IOException;
+
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,16 +12,37 @@ import javafx.stage.Stage;
 
 public class StartApp extends Application {
 
+    public static Stage mainStage;
+    private static Parent mainPane;
+    
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
         
-        Scene scene = new Scene(root);
+        mainStage = stage;
+
+        mainStage.setTitle("Tomada de Decisão");
+        mainStage.setMinWidth(900);
+        mainStage.setMinHeight(700);
+        mainStage.centerOnScreen();
+        mainStage.setMaximized(true);
+
+        mainStage.setOnCloseRequest(WindowEvent -> {
+
+            Platform.exit();
+            System.exit(0);
+        });
+        
+        mostrarScenePrincipal();
+    }
+
+    private void mostrarScenePrincipal() throws IOException {
+
+        mainPane = FXMLLoader.load(getClass().getResource("/views/Scene.fxml"));
+        
+        Scene scene = new Scene (mainPane);
         scene.getStylesheets().add("/styles/Styles.css");
-        
-        stage.setTitle("JavaFX and Maven");
-        stage.setScene(scene);
-        stage.show();
+        mainStage.setScene(scene);
+        mainStage.show();
     }
 
     /**
