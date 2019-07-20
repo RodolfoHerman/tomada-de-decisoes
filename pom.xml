@@ -39,7 +39,12 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.9.9.1</version>
         </dependency>
-        
+        <!-- Download JAR file in http://www.ssclab.org/en/download.html -->
+        <dependency>
+            <groupId>org.ssclab</groupId>
+            <artifactId>ssclab</artifactId>
+            <version>3.0.1r3</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>${project.artifactId}</finalName>
