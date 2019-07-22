@@ -10,6 +10,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import br.com.rodolfo.trabalho.StartApp;
+import br.com.rodolfo.trabalho.algorithms.JOEL;
 import br.com.rodolfo.trabalho.configs.Configuracoes;
 import br.com.rodolfo.trabalho.models.Objetivo;
 import br.com.rodolfo.trabalho.models.Restricao;
@@ -70,7 +71,12 @@ public class TelaController implements Initializable {
 	}
 
     @FXML
-    public void btnAnalisarAction() {}
+    public void btnAnalisarAction() {
+
+        JOEL joel = new JOEL(objetivos, restricoes);
+
+        this.textArea.setText(joel.imprimirRestricoes());
+    }
 
     @FXML
     public void abrirArquivos() { 
