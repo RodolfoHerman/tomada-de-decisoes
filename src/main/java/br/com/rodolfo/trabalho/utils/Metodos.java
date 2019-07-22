@@ -33,5 +33,15 @@ public class Metodos {
         }
     }
 
+    public static String getMaxMinNominal(String nome) {
+
+        return nome.toLowerCase().equals("sim") ? "Maximizar" : "Minimizar";
+    }
+
+    public static String formatarNumero(double numero) {
+        
+        return String.format("%.2f", numero);
+    }
+
     private Metodos() {}
 }

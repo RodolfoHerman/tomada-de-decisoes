@@ -75,7 +75,8 @@ public class TelaController implements Initializable {
 
         JOEL joel = new JOEL(objetivos, restricoes);
 
-        this.textArea.setText(joel.imprimirRestricoes());
+        // this.textArea.setText(joel.imprimirRestricoes());
+        this.textArea.setText(joel.imprimirObjetivos());
     }
 
     @FXML

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.rodolfo.trabalho.models.Objetivo;
+import br.com.rodolfo.trabalho.models.Projeto;
 import br.com.rodolfo.trabalho.models.Restricao;
+import br.com.rodolfo.trabalho.utils.Metodos;
 
 /**
  * JOEL
@@ -47,6 +49,31 @@ public class JOEL implements Execute {
             imprimir.append(String.join(" + ", temp)).append(" ").append(restricao.getSinal()).append(" ").append(restricao.getValor());
             imprimir.append(System.lineSeparator());
 
+        });
+
+        return imprimir.toString();
+    }
+
+    public String imprimirObjetivos() {
+        
+        StringBuilder imprimir = new StringBuilder();
+
+        imprimir.append("######").append(" Informações iniciais para construção das funções objetivo. ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
+
+        this.objetivos.stream().forEach(objetivo -> {
+
+            imprimir.append("(").append(objetivo.getNome()).append(")").append("\t")
+                .append(Metodos.getMaxMinNominal(objetivo.getMaximizar()))
+                .append(System.lineSeparator());
+
+            for(Projeto projeto : objetivo.getProjetos()) {
+
+                imprimir.append(projeto.getNome()).append("\t\t").append("C' : ").append(Metodos.formatarNumero(projeto.getLower_c()))
+                    .append("\t\t").append("C'' : ").append(Metodos.formatarNumero(projeto.getUpper_c()))
+                    .append(System.lineSeparator());
+            }
+
+            imprimir.append(System.lineSeparator()).append(System.lineSeparator());
         });
 
         return imprimir.toString();
