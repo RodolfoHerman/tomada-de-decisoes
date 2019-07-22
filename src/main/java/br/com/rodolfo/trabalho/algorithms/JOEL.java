@@ -1,8 +1,12 @@
 package br.com.rodolfo.trabalho.algorithms;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import br.com.rodolfo.trabalho.algorithms.sequence.Sobol;
 import br.com.rodolfo.trabalho.models.Objetivo;
 import br.com.rodolfo.trabalho.models.Projeto;
 import br.com.rodolfo.trabalho.models.Restricao;
@@ -15,19 +19,67 @@ public class JOEL implements Execute {
 
     private final List<Objetivo> objetivos;
     private final List<Restricao> restricoes;
+    private final int cenarios;
 
-    public JOEL(List<Objetivo> objetivos, List<Restricao> restricoes) {
+    public JOEL(int cenarios, List<Objetivo> objetivos, List<Restricao> restricoes) {
 
+        this.cenarios   = cenarios; 
         this.objetivos  = objetivos;
         this.restricoes = restricoes;
     }
 
     @Override
     public String execute() {
-        return null;
+        
+        StringBuilder imprimir = new StringBuilder();
+
+        imprimir.append(imprimirRestricoes());
+        imprimir.append(System.lineSeparator()).append(System.lineSeparator());
+        imprimir.append(imprimirObjetivos());
+        imprimir.append(System.lineSeparator()).append(System.lineSeparator());
+        imprimir.append(imprimirEstadosDaNatureza(representarEstadosDaNatureza()));
+
+        return imprimir.toString();
     }
 
-    public String imprimirRestricoes() {
+    public double[][] representarEstadosDaNatureza() {
+        
+        int dimensao = getDimensaoSobol();
+        double[][] sobol  = (new Sobol()).generate((cenarios + 1), dimensao);
+        double[][] estadosDaNatureza = new double[cenarios][dimensao];
+
+        List<Double[]> intervaloCoeficientes = objetivos.stream()
+            .flatMap(objetivo -> objetivo.getProjetos()
+            .stream()
+            .map(projeto -> new Double[]{projeto.getLower_c(), projeto.getUpper_c()}))
+            .collect(Collectors.toList());
+
+        for(int x = 0; x < cenarios; x++) {
+            for(int y = 0; y < dimensao; y++) {
+
+                estadosDaNatureza[x][y] = cacularInterpolacao(intervaloCoeficientes.get(y), sobol[x+1][y]);
+            }
+        }
+
+        return estadosDaNatureza;
+    }
+
+    private int getDimensaoSobol() {
+
+        int qtdFuncoesObjetivo = objetivos.size();
+        int qtdCoeficientes    = restricoes.get(0).getCoeficientes().length;
+
+        return qtdFuncoesObjetivo * qtdCoeficientes;
+    }
+
+    private double cacularInterpolacao(Double[] intervalo, double valor) {
+        
+        return ((new BigDecimal(intervalo[0] + ((intervalo[1] - intervalo[0]) * valor)))
+            .setScale(2, RoundingMode.HALF_UP))
+            .doubleValue();
+    }
+
+    private String imprimirRestricoes() {
         
         StringBuilder imprimir = new StringBuilder();
         List<String> temp = new ArrayList<>();
@@ -54,7 +106,7 @@ public class JOEL implements Execute {
         return imprimir.toString();
     }
 
-    public String imprimirObjetivos() {
+    private String imprimirObjetivos() {
         
         StringBuilder imprimir = new StringBuilder();
 
@@ -84,4 +136,35 @@ public class JOEL implements Execute {
 
         return imprimir.toString();
     }
+
+    private String imprimirEstadosDaNatureza(double[][] estados) {
+        
+        StringBuilder imprimir = new StringBuilder();
+
+        imprimir.append("######").append(" Representação dos estados da Natureza ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
+
+        imprimir.append("s").append("\t\t");
+
+        for(int x = 0; x < estados[0].length; x++) {
+            
+            imprimir.append(" t = ").append(x+1).append(" \t\t");
+        }
+
+        imprimir.append(System.lineSeparator());
+
+        for(int x = 0; x < estados.length; x++) {
+
+            imprimir.append(x + 1).append("\t\t");
+
+            for(int y = 0; y < estados[0].length; y++) {
+
+                imprimir.append(Metodos.formatarNumero(estados[x][y])).append("\t\t");
+            }
+
+            imprimir.append(System.lineSeparator());
+        }
+
+        return imprimir.toString();
+    }
+
 }
