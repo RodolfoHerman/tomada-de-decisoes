@@ -4,13 +4,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import br.com.rodolfo.trabalho.algorithms.sequence.Sobol;
+import br.com.rodolfo.trabalho.models.FuncaoObjetivo;
 import br.com.rodolfo.trabalho.models.Objetivo;
 import br.com.rodolfo.trabalho.models.Projeto;
 import br.com.rodolfo.trabalho.models.Restricao;
 import br.com.rodolfo.trabalho.utils.Metodos;
+import it.ssc.pl.milp.GoalType;
 
 /**
  * JOEL
@@ -33,13 +36,49 @@ public class JOEL implements Execute {
         
         StringBuilder imprimir = new StringBuilder();
 
+        int tamanhoParticao = restricoes.get(0).getCoeficientes().length;
+        double[][] estadosNatureza = representarEstadosDaNatureza();
+        List<GoalType> listDeTipos = getListaDeTipos();
+
         imprimir.append(imprimirRestricoes());
         imprimir.append(System.lineSeparator()).append(System.lineSeparator());
         imprimir.append(imprimirObjetivos());
+        imprimir.append(imprimirEstadosDaNatureza(estadosNatureza));
         imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        imprimir.append(imprimirEstadosDaNatureza(representarEstadosDaNatureza()));
+        imprimir.append(imprimirProblemasMultiobjetivo(criarProblemasMultiobjetivo(estadosNatureza, tamanhoParticao, listDeTipos)));
 
         return imprimir.toString();
+    }
+
+    public List<List<FuncaoObjetivo>> criarProblemasMultiobjetivo(double[][] estadosDaNatureza, int tamanhoParticao, List<GoalType> listDeTipos) {
+        
+        AtomicInteger contador = new AtomicInteger();
+        List<List<Double[]>> listaArrayAgrupado = Metodos.transformarArray2DParaListaArrayAgrupada(estadosDaNatureza, tamanhoParticao);
+        List<List<FuncaoObjetivo>> funcoesObjetivo = listaArrayAgrupado.stream().map(elemento -> {
+
+                List<FuncaoObjetivo> array = new ArrayList<>();
+
+                for(int x = 0; x < listDeTipos.size(); x++) {
+
+                    FuncaoObjetivo fObjetivo = new FuncaoObjetivo();
+                    
+                    fObjetivo.coeficientes = elemento.get(x);
+                    fObjetivo.tipo = listDeTipos.get(x);
+                    fObjetivo.restricoes = restricoes;
+
+                    array.add(fObjetivo);
+                }
+
+                return array;
+            }
+        //).flatMap(List::stream)
+        ).flatMap(lista -> lista.stream())
+        .collect(Collectors.groupingBy(it -> contador.getAndIncrement()/listDeTipos.size()))
+        .values()
+        .stream()
+        .collect(Collectors.toList());
+
+        return funcoesObjetivo;
     }
 
     public double[][] representarEstadosDaNatureza() {
@@ -79,6 +118,11 @@ public class JOEL implements Execute {
             .doubleValue();
     }
 
+    private List<GoalType> getListaDeTipos() {
+
+        return objetivos.stream().map(objetivo -> Metodos.getMinMaxTipo(objetivo.getMaximizar())).collect(Collectors.toList());
+    }
+
     private String imprimirRestricoes() {
         
         StringBuilder imprimir = new StringBuilder();
@@ -115,7 +159,7 @@ public class JOEL implements Execute {
         this.objetivos.stream().forEach(objetivo -> {
 
             imprimir.append("(").append(objetivo.getNome()).append(")").append("\t")
-                .append(Metodos.getMaxMinNominal(objetivo.getMaximizar()))
+                .append(Metodos.getMinMaxNominal(objetivo.getMaximizar()))
                 .append(System.lineSeparator()).append(System.lineSeparator())
                 .append("Coef")
                 .append("\t\t")
@@ -163,6 +207,25 @@ public class JOEL implements Execute {
 
             imprimir.append(System.lineSeparator());
         }
+
+        return imprimir.toString();
+    }
+
+    private String imprimirProblemasMultiobjetivo(List<List<FuncaoObjetivo>> funcoesObjetivo) {
+        
+        StringBuilder imprimir = new StringBuilder();
+
+        imprimir.append("######").append(" Problemas Multiobjetivo ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
+
+        funcoesObjetivo.stream().forEach(funcao -> {
+            
+            for(int x = 0; x < funcao.size(); x++) {
+
+                imprimir.append("F").append(x+1).append("(X) = ").append(funcao.get(x).getFuncaoTextual()).append(System.lineSeparator());
+            }
+
+            imprimir.append(System.lineSeparator());
+        });
 
         return imprimir.toString();
     }
