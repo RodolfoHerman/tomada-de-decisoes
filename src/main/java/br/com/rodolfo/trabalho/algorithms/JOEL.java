@@ -3,6 +3,7 @@ package br.com.rodolfo.trabalho.algorithms;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,7 @@ public class JOEL implements Execute {
         List<GoalType> listaDeTipos = getListaDeTipos();
         List<List<FuncaoObjetivo>> problemasMultiobjetivo = criarProblemasMultiobjetivo(estadosNatureza, tamanhoParticao, listaDeTipos);
         List<Map<String,Double[]>> solucoes = criarSolucoes(problemasMultiobjetivo);
+        Map<String,List<FuncaoObjetivo>> mapaFuncoes = extrairFuncoesObjetivos(problemasMultiobjetivo);
         
         imprimir.append(imprimirRestricoes());
         imprimir.append(System.lineSeparator()).append(System.lineSeparator());
@@ -55,6 +57,30 @@ public class JOEL implements Execute {
         imprimir.append(imprimirSolucoes(solucoes));
 
         return imprimir.toString();
+    }
+
+    private Map<String,List<FuncaoObjetivo>> extrairFuncoesObjetivos(List<List<FuncaoObjetivo>> problemasMultiobjetivo) {
+        
+        Map<String,List<FuncaoObjetivo>> mapaObjetivos = new HashMap<>();
+
+        for(List<FuncaoObjetivo> lista : problemasMultiobjetivo) {
+
+            for(int x = 0; x < lista.size(); x++) {
+
+                List<FuncaoObjetivo> temp = mapaObjetivos.remove(objetivos.get(x).getNome());
+
+                if(temp == null) {
+
+                    temp = new ArrayList<>();
+                }
+
+                temp.add(lista.get(x));
+
+                mapaObjetivos.put(objetivos.get(x).getNome(), temp);
+            }
+        }
+
+        return mapaObjetivos;
     }
 
     private List<Map<String,Double[]>> criarSolucoes(List<List<FuncaoObjetivo>> problemasMultiobjetivo) {
