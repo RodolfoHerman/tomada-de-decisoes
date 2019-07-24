@@ -243,7 +243,7 @@ public class JOEL implements Execute {
             
             for(int x = 0; x < funcao.size(); x++) {
 
-                imprimir.append(funcao.get(x).getDescricao()).append("F").append(x+1).append("(X) = ").append(funcao.get(x).toString()).append(System.lineSeparator());
+                imprimir.append(funcao.get(x).getDescricao()).append(" F").append(x+1).append("(X) = ").append(funcao.get(x).toString()).append(System.lineSeparator());
             }
 
             imprimir.append(System.lineSeparator());
@@ -269,7 +269,7 @@ public class JOEL implements Execute {
             
             for(int x = 0; x < entry.getValue().length; x++) {
 
-                temp.append("X").append(x+1).append(" = ").append(entry.getValue()[x]).append(", \t");
+                temp.append("X").append(x+1).append(" = ").append(Metodos.formatarNumero(entry.getValue()[x])).append("  \t");
             }
 
             temp.append(entry.getKey());
@@ -277,6 +277,8 @@ public class JOEL implements Execute {
             return temp.toString();
 
         }).collect(Collectors.joining(System.lineSeparator())));
+
+        imprimir.append(System.lineSeparator());
 
         return imprimir.toString();
     }
