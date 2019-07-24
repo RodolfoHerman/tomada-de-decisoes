@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 import br.com.rodolfo.trabalho.algorithms.sequence.Sobol;
 import br.com.rodolfo.trabalho.models.FuncaoObjetivo;
@@ -46,7 +48,9 @@ public class JOEL implements Execute {
         List<List<FuncaoObjetivo>> problemasMultiobjetivo = criarProblemasMultiobjetivo(estadosNatureza, tamanhoParticao, listaDeTipos);
         List<Map<String,Double[]>> solucoes = criarSolucoes(problemasMultiobjetivo);
         Map<String,List<FuncaoObjetivo>> mapaFuncoes = extrairFuncoesObjetivos(problemasMultiobjetivo);
-        
+        List<Double[]> solucoesExtraidas = extrairSolucoes(solucoes);
+
+
         imprimir.append(imprimirRestricoes());
         imprimir.append(System.lineSeparator()).append(System.lineSeparator());
         imprimir.append(imprimirObjetivos());
@@ -57,6 +61,13 @@ public class JOEL implements Execute {
         imprimir.append(imprimirSolucoes(solucoes));
 
         return imprimir.toString();
+    }
+
+    private List<Double[]> extrairSolucoes(List<Map<String,Double[]>> solucoes) {
+
+        return solucoes.stream().flatMap(elemento ->
+            elemento.entrySet().stream().map(Map.Entry::getValue)
+        ).collect(Collectors.toList());
     }
 
     private Map<String,List<FuncaoObjetivo>> extrairFuncoesObjetivos(List<List<FuncaoObjetivo>> problemasMultiobjetivo) {
