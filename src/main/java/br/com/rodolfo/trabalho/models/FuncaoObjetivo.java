@@ -13,11 +13,42 @@ import it.ssc.pl.milp.GoalType;
  */
 public class FuncaoObjetivo {
 
-    public Double[] coeficientes;
-    public GoalType tipo;
+    private final String descricao;
+    private final Double[] coeficientes;
+    private final GoalType tipo;
     public List<Restricao> restricoes;
 
-    public String getFuncaoTextual() {
+    public FuncaoObjetivo(String descricao, Double[] coeficientes, GoalType tipo) {
+
+        this.descricao = descricao;
+        this.coeficientes = coeficientes;
+        this.tipo = tipo;
+    }
+
+    public String getDescricao() {
+        
+        return this.descricao;
+    }
+
+    public double[] getCoeficientes() {
+
+        return Stream.of(coeficientes).mapToDouble(valor -> valor.doubleValue()).toArray();
+    }
+
+    public GoalType getTipo() {
+
+        return this.tipo;
+    }
+
+    public double resultado(Double[] solucao) {
+        
+        AtomicInteger posicao = new AtomicInteger(0);
+
+        return Stream.of(coeficientes).mapToDouble(valor -> valor.doubleValue() * solucao[posicao.getAndIncrement()].doubleValue()).sum();
+    }
+    
+    @Override
+    public String toString() {
 
         AtomicInteger contador = new AtomicInteger(1);
         

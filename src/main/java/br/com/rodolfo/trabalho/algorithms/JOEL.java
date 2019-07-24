@@ -3,7 +3,9 @@ package br.com.rodolfo.trabalho.algorithms;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -12,6 +14,7 @@ import br.com.rodolfo.trabalho.models.FuncaoObjetivo;
 import br.com.rodolfo.trabalho.models.Objetivo;
 import br.com.rodolfo.trabalho.models.Projeto;
 import br.com.rodolfo.trabalho.models.Restricao;
+import br.com.rodolfo.trabalho.models.Solucao;
 import br.com.rodolfo.trabalho.utils.Metodos;
 import it.ssc.pl.milp.GoalType;
 
@@ -38,45 +41,64 @@ public class JOEL implements Execute {
 
         int tamanhoParticao = restricoes.get(0).getCoeficientes().length;
         double[][] estadosNatureza = representarEstadosDaNatureza();
-        List<GoalType> listDeTipos = getListaDeTipos();
-
+        List<GoalType> listaDeTipos = getListaDeTipos();
+        List<List<FuncaoObjetivo>> problemasMultiobjetivo = criarProblemasMultiobjetivo(estadosNatureza, tamanhoParticao, listaDeTipos);
+        List<Map<String,Double[]>> solucoes = criarSolucoes(problemasMultiobjetivo);
+        
         imprimir.append(imprimirRestricoes());
         imprimir.append(System.lineSeparator()).append(System.lineSeparator());
         imprimir.append(imprimirObjetivos());
         imprimir.append(imprimirEstadosDaNatureza(estadosNatureza));
         imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        imprimir.append(imprimirProblemasMultiobjetivo(criarProblemasMultiobjetivo(estadosNatureza, tamanhoParticao, listDeTipos)));
+        imprimir.append(imprimirProblemasMultiobjetivo(problemasMultiobjetivo));
+        imprimir.append(System.lineSeparator()).append(System.lineSeparator());
+        imprimir.append(imprimirSolucoes(solucoes));
 
         return imprimir.toString();
     }
 
-    public List<List<FuncaoObjetivo>> criarProblemasMultiobjetivo(double[][] estadosDaNatureza, int tamanhoParticao, List<GoalType> listDeTipos) {
+    private List<Map<String,Double[]>> criarSolucoes(List<List<FuncaoObjetivo>> problemasMultiobjetivo) {
         
-        AtomicInteger contador = new AtomicInteger();
+        Solucao solucao = new Solucao(this.restricoes);
+
+        return problemasMultiobjetivo.stream().map(problemas -> {
+
+            try {
+
+                return solucao.getSolucao(problemas);
+
+            } catch (Exception e) {
+                
+                return null;
+            }
+        }).collect(Collectors.toList());
+    }
+
+    private List<List<FuncaoObjetivo>> criarProblemasMultiobjetivo(double[][] estadosDaNatureza, int tamanhoParticao, List<GoalType> listaDeTipos) {
+        
+        AtomicInteger contador = new AtomicInteger(1);
         List<List<Double[]>> listaArrayAgrupado = Metodos.transformarArray2DParaListaArrayAgrupada(estadosDaNatureza, tamanhoParticao);
         List<List<FuncaoObjetivo>> funcoesObjetivo = listaArrayAgrupado.stream().map(elemento -> {
 
                 List<FuncaoObjetivo> array = new ArrayList<>();
 
-                for(int x = 0; x < listDeTipos.size(); x++) {
+                for(int x = 0; x < listaDeTipos.size(); x++) {
 
-                    FuncaoObjetivo fObjetivo = new FuncaoObjetivo();
+                    String descricao = "(" + contador.getAndIncrement() + ")";
                     
-                    fObjetivo.coeficientes = elemento.get(x);
-                    fObjetivo.tipo = listDeTipos.get(x);
-                    fObjetivo.restricoes = restricoes;
+                    FuncaoObjetivo fObjetivo = new FuncaoObjetivo(descricao, elemento.get(x), listaDeTipos.get(x));
 
                     array.add(fObjetivo);
                 }
 
                 return array;
             }
-        //).flatMap(List::stream)
-        ).flatMap(lista -> lista.stream())
-        .collect(Collectors.groupingBy(it -> contador.getAndIncrement()/listDeTipos.size()))
-        .values()
-        .stream()
-        .collect(Collectors.toList());
+        // // ).flatMap(List::stream)
+        // ).flatMap(lista -> lista.stream())
+        // .collect(Collectors.groupingBy(it -> contador.getAndIncrement()/listaDeTipos.size()))
+        // .values()
+        // .stream()
+        ).collect(Collectors.toList());
 
         return funcoesObjetivo;
     }
@@ -120,7 +142,7 @@ public class JOEL implements Execute {
 
     private List<GoalType> getListaDeTipos() {
 
-        return objetivos.stream().map(objetivo -> Metodos.getMinMaxTipo(objetivo.getMaximizar())).collect(Collectors.toList());
+        return objetivos.stream().map(objetivo -> objetivo.getMinMaxTipo()).collect(Collectors.toList());
     }
 
     private String imprimirRestricoes() {
@@ -159,7 +181,7 @@ public class JOEL implements Execute {
         this.objetivos.stream().forEach(objetivo -> {
 
             imprimir.append("(").append(objetivo.getNome()).append(")").append("\t")
-                .append(Metodos.getMinMaxNominal(objetivo.getMaximizar()))
+                .append(objetivo.getMinMaxNominal())
                 .append(System.lineSeparator()).append(System.lineSeparator())
                 .append("Coef")
                 .append("\t\t")
@@ -221,11 +243,40 @@ public class JOEL implements Execute {
             
             for(int x = 0; x < funcao.size(); x++) {
 
-                imprimir.append("F").append(x+1).append("(X) = ").append(funcao.get(x).getFuncaoTextual()).append(System.lineSeparator());
+                imprimir.append(funcao.get(x).getDescricao()).append("F").append(x+1).append("(X) = ").append(funcao.get(x).toString()).append(System.lineSeparator());
             }
 
             imprimir.append(System.lineSeparator());
         });
+
+        return imprimir.toString();
+    }
+
+    private String imprimirSolucoes(List<Map<String,Double[]>> solucoes) {
+        
+        StringBuilder imprimir = new StringBuilder();
+        AtomicInteger contador = new AtomicInteger(1);
+
+        imprimir.append("######").append(" Possíveis soluções. ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
+
+        imprimir.append(solucoes.stream().map(solucao -> {
+
+            StringBuilder temp = new StringBuilder();
+            Iterator<Map.Entry<String,Double[]>> entries = solucao.entrySet().iterator();
+            Map.Entry<String,Double[]> entry = entries.next();
+
+            temp.append("-> ").append("s = ").append(contador.getAndIncrement()).append(" : \t");
+            
+            for(int x = 0; x < entry.getValue().length; x++) {
+
+                temp.append("X").append(x+1).append(" = ").append(entry.getValue()[x]).append(", \t");
+            }
+
+            temp.append(entry.getKey());
+
+            return temp.toString();
+
+        }).collect(Collectors.joining(System.lineSeparator())));
 
         return imprimir.toString();
     }

@@ -72,19 +72,9 @@ public class Metodos {
         return Arrays.stream(matriz).map(linha -> DoubleStream.of(linha).boxed().collect(Collectors.toList())).collect(Collectors.toList());
     }
 
-    public static String getMinMaxNominal(String tipo) {
-
-        return tipo.toLowerCase().equals("sim") ? "Maximizar" : "Minimizar";
-    }
-
     public static String getMinMaxNominal(GoalType tipo) {
 
         return tipo.name().equals("MAX") ? "Maximizar" : "Minimizar";
-    }
-
-    public static GoalType getMinMaxTipo(String tipo) {
-
-        return tipo.toLowerCase().equals("sim") ? GoalType.MAX : GoalType.MIN;
     }
 
     public static String formatarNumero(double numero) {

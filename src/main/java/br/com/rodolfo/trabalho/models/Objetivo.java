@@ -2,6 +2,8 @@ package br.com.rodolfo.trabalho.models;
 
 import java.util.List;
 
+import it.ssc.pl.milp.GoalType;
+
 /**
  * Objetivo
  */
@@ -41,6 +43,16 @@ public class Objetivo {
 
     public void setProjetos(List<Projeto> projetos) {
         this.projetos = projetos;
+    }
+
+    public String getMinMaxNominal() {
+
+        return this.maximizar.toLowerCase().trim().equals("sim") ? "Maximizar" : "Minimizar";
+    }
+
+    public GoalType getMinMaxTipo() {
+        
+        return this.maximizar.toLowerCase().trim().equals("sim") ? GoalType.MAX : GoalType.MIN;
     }
 
     @Override

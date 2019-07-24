@@ -1,5 +1,7 @@
 package br.com.rodolfo.trabalho.models;
 
+import it.ssc.pl.milp.ConsType;
+
 /**
  * Restricao
  */
@@ -49,6 +51,28 @@ public class Restricao {
 
     public void setValor(double valor) {
         this.valor = valor;
+    }
+
+    public ConsType transformarSinal() {
+        
+        String formatado = this.sinal.trim();
+
+        if(formatado.equals("=")) {
+
+            return ConsType.EQ;
+        }
+
+        if(formatado.equals("<=") || formatado.equals("<")) {
+
+            return ConsType.LE;
+        }
+
+        if(formatado.equals(">=") || formatado.equals(">")) {
+
+            return ConsType.GE;
+        }
+
+        return ConsType.LE;
     }
 
 
