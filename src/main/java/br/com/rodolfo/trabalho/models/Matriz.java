@@ -1,6 +1,9 @@
 package br.com.rodolfo.trabalho.models;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 import it.ssc.pl.milp.GoalType;
 
@@ -36,6 +39,11 @@ public class Matriz {
                 this.payoff[x][y] = funcoesObjetivo.get(y).resultado(solucoes.get(x));
             }
         }
+    }
+
+    private List<Double> calcularCriterioWald() {
+
+        return Stream.of(this.payoff).map(row -> DoubleStream.of(row).max().orElse(0.0)).collect(Collectors.toList());
     }
 
 }
