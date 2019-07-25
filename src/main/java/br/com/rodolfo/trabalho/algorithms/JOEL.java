@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 import br.com.rodolfo.trabalho.algorithms.sequence.Sobol;
 import br.com.rodolfo.trabalho.models.FuncaoObjetivo;
+import br.com.rodolfo.trabalho.models.Matriz;
 import br.com.rodolfo.trabalho.models.Objetivo;
 import br.com.rodolfo.trabalho.models.Projeto;
 import br.com.rodolfo.trabalho.models.Restricao;
@@ -49,7 +50,9 @@ public class JOEL implements Execute {
         List<Map<String,Double[]>> solucoes = criarSolucoes(problemasMultiobjetivo);
         Map<String,List<FuncaoObjetivo>> mapaFuncoes = extrairFuncoesObjetivos(problemasMultiobjetivo);
         List<Double[]> solucoesExtraidas = extrairSolucoes(solucoes);
-
+        List<Matriz> listaMatrizes = mapaFuncoes.entrySet().stream().map(entry -> {
+            return new Matriz(entry.getKey(), entry.getValue(), solucoesExtraidas);
+        }).collect(Collectors.toList());
 
         imprimir.append(imprimirRestricoes());
         imprimir.append(System.lineSeparator()).append(System.lineSeparator());
