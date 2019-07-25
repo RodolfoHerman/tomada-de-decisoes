@@ -1,8 +1,12 @@
 package br.com.rodolfo.trabalho.models;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import it.ssc.pl.milp.GoalType;
@@ -50,4 +54,29 @@ public class Matriz {
 
         return Stream.of(this.payoff).map(row -> DoubleStream.of(row).average().orElse(0.0)).collect(Collectors.toList());
     }
+
+    private List<Double> calcularCriterioSavage() {
+
+        List<DoubleSummaryStatistics> sumariosColunas = IntStream.range(0, this.payoff[0].length).boxed().map(x -> 
+            Stream.of(this.payoff).map(elementos -> elementos[x])
+            .collect(Collectors.summarizingDouble(Double::doubleValue))
+        ).collect(Collectors.toList());
+
+        return Stream.of(this.payoff).map(row -> {
+            return IntStream.range(0, row.length).boxed().map(x -> {
+                
+                if(this.tipo == GoalType.MAX) {
+
+                    return (new BigDecimal(sumariosColunas.get(x).getMax() - row[x])).setScale(2, RoundingMode.HALF_UP).doubleValue();
+
+                } else {
+
+                    return (new BigDecimal(row[x] - sumariosColunas.get(x).getMin())).setScale(2, RoundingMode.HALF_UP).doubleValue();    
+                }
+            }).toArray(Double[]::new);
+        }).map(elementos -> Stream.of(elementos).mapToDouble(d -> d.doubleValue()))
+        .map(el -> DoubleStream.of(el.toArray()).max().orElse(0.0))
+        .collect(Collectors.toList());
+    }
+
 }
