@@ -46,4 +46,8 @@ public class Matriz {
         return Stream.of(this.payoff).map(row -> DoubleStream.of(row).max().orElse(0.0)).collect(Collectors.toList());
     }
 
+    private List<Double> calcularCriterioLaplace() {
+
+        return Stream.of(this.payoff).map(row -> DoubleStream.of(row).average().orElse(0.0)).collect(Collectors.toList());
+    }
 }
