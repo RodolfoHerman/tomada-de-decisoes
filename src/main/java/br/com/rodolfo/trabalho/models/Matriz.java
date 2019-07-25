@@ -79,4 +79,14 @@ public class Matriz {
         .collect(Collectors.toList());
     }
 
+    private List<Double> calcularCriterioHurwicz() {
+        
+        return Stream.of(this.payoff).map(row -> {
+
+            DoubleSummaryStatistics sumario =  DoubleStream.of(row).boxed().collect(Collectors.summarizingDouble(Double::doubleValue));
+
+            return (new BigDecimal(((0.75 * sumario.getMax()) + (0.25 * sumario.getMin())))).setScale(2, RoundingMode.HALF_UP).doubleValue();
+        }).collect(Collectors.toList());
+    }
+
 }
