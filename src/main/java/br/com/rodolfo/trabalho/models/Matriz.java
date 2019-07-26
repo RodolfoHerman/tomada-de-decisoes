@@ -2,6 +2,7 @@ package br.com.rodolfo.trabalho.models;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,6 +10,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import br.com.rodolfo.trabalho.utils.Metodos;
 import it.ssc.pl.milp.GoalType;
 
 /**
@@ -20,7 +22,8 @@ public class Matriz {
     private final List<FuncaoObjetivo> funcoesObjetivo;
     private final List<Double[]> solucoes;
     private final GoalType tipo;
-    private double[][] payoff;
+    private final double[][] payoff;
+    private final List<List<Double>> criteriosDeEscolha;
 
     public Matriz(String descricao, List<FuncaoObjetivo> funcoesObjetivo, List<Double[]> solucoes) {
 
@@ -29,20 +32,23 @@ public class Matriz {
         this.solucoes = solucoes;
         this.tipo = funcoesObjetivo.get(0).getTipo();
 
-        criarPayoff();
+        this.payoff = criarPayoff();
+        this.criteriosDeEscolha = Arrays.asList(calcularCriterioWald(), calcularCriterioLaplace(), calcularCriterioSavage(), calcularCriterioHurwicz());
     }
 
-    private void criarPayoff() {
+    private double[][] criarPayoff() {
         
-        this.payoff = new double[solucoes.size()][funcoesObjetivo.size()];
+        double[][] temp = new double[this.solucoes.size()][this.funcoesObjetivo.size()];
 
-        for(int x = 0; x < this.payoff.length; x++) {
+        for(int x = 0; x < temp.length; x++) {
 
-            for(int y = 0; y < this.payoff[0].length; y++) {
+            for(int y = 0; y < temp[0].length; y++) {
 
-                this.payoff[x][y] = funcoesObjetivo.get(y).resultado(solucoes.get(x));
+                temp[x][y] = this.funcoesObjetivo.get(y).resultado(this.solucoes.get(x));
             }
         }
+
+        return temp;
     }
 
     private List<Double> calcularCriterioWald() {
@@ -89,4 +95,61 @@ public class Matriz {
         }).collect(Collectors.toList());
     }
 
+    public String imprimirPayoff() {
+
+        StringBuilder imprimir = new StringBuilder();
+        
+        int linhas  = this.payoff.length;
+        int colunas = this.payoff[0].length;
+
+        imprimir.append("######").append(" Matriz payoff para: ").append(this.descricao).append(" ######").append(System.lineSeparator()).append(System.lineSeparator());
+
+        imprimir.append("  ").append("\t\t");
+
+        for(int x = 1; x <= colunas; x++) {
+
+            imprimir.append(" Y").append(x).append(" \t\t");
+        }
+
+        imprimir.append(System.lineSeparator());
+
+        for(int x = 0; x < linhas; x++) {
+
+            imprimir.append("X").append(x+1).append("\t\t");
+
+            for(int y = 0; y < colunas; y++) {
+
+                imprimir.append(Metodos.formatarNumero(this.payoff[x][y])).append("\t\t");
+            }
+
+            imprimir.append(System.lineSeparator());
+        }
+
+        return imprimir.toString();
+    }
+
+    public String imprimirCriteriosDeEscolha() {
+        
+        StringBuilder imprimir = new StringBuilder();
+
+        int linhas  = this.criteriosDeEscolha.size();
+        int colunas = this.criteriosDeEscolha.get(0).size();
+
+        imprimir.append("######").append(" Matriz de critérios de escolha para: ").append(this.descricao).append("######").append(System.lineSeparator()).append(System.lineSeparator());
+        imprimir.append("  ").append("\t\t").append(" WAL. ").append("\t\t").append(" LAP. ").append("\t\t").append(" SAV. ").append("\t\t").append(" HUR. ").append(System.lineSeparator());
+        
+        for(int x = 0; x < linhas; x++) {
+
+            imprimir.append("X").append(x+1).append("\t\t");
+
+            for(int y = 0; y < colunas; y++) {
+
+                imprimir.append(Metodos.formatarNumero(this.criteriosDeEscolha.get(x).get(y))).append("\t\t");
+            }
+
+            imprimir.append(System.lineSeparator());
+        }
+
+        return imprimir.toString();
+    }
 }

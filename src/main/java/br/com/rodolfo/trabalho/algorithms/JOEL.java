@@ -62,6 +62,8 @@ public class JOEL implements Execute {
         imprimir.append(imprimirProblemasMultiobjetivo(problemasMultiobjetivo));
         imprimir.append(System.lineSeparator()).append(System.lineSeparator());
         imprimir.append(imprimirSolucoes(solucoes));
+        imprimir.append(System.lineSeparator()).append(System.lineSeparator());
+        imprimir.append(listaMatrizes.stream().map(elemento -> elemento.imprimirPayoff()).collect(Collectors.joining(System.lineSeparator())));
 
         return imprimir.toString();
     }
