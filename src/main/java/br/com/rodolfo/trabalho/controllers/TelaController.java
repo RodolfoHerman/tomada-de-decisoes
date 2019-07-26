@@ -53,6 +53,7 @@ public class TelaController implements Initializable {
         this.configuracoes = new Configuracoes();
         this.objetivoService  = new ObjetivoService();
         this.restricaoService = new RestricaoService();
+        this.textArea.setStyle("-fx-font-family: monospace");
 
         Properties properties = new Properties();
 

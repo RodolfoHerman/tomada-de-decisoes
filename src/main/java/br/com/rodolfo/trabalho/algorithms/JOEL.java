@@ -19,6 +19,7 @@ import br.com.rodolfo.trabalho.models.Objetivo;
 import br.com.rodolfo.trabalho.models.Projeto;
 import br.com.rodolfo.trabalho.models.Restricao;
 import br.com.rodolfo.trabalho.models.Solucao;
+import br.com.rodolfo.trabalho.utils.Formatadora;
 import br.com.rodolfo.trabalho.utils.Metodos;
 import it.ssc.pl.milp.GoalType;
 
@@ -54,16 +55,18 @@ public class JOEL implements Execute {
             return new Matriz(entry.getKey(), entry.getValue(), solucoesExtraidas);
         }).collect(Collectors.toList());
 
-        imprimir.append(imprimirRestricoes());
-        imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        imprimir.append(imprimirObjetivos());
-        imprimir.append(imprimirEstadosDaNatureza(estadosNatureza));
-        imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        imprimir.append(imprimirProblemasMultiobjetivo(problemasMultiobjetivo));
-        imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        imprimir.append(imprimirSolucoes(solucoes));
-        imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        imprimir.append(listaMatrizes.stream().map(elemento -> elemento.imprimirPayoff()).collect(Collectors.joining(System.lineSeparator())));
+        // imprimir.append(imprimirRestricoes());
+        // imprimir.append(System.lineSeparator()).append(System.lineSeparator());
+        // imprimir.append(imprimirObjetivos());
+        // imprimir.append(imprimirEstadosDaNatureza(estadosNatureza));
+        // imprimir.append(System.lineSeparator()).append(System.lineSeparator());
+        // imprimir.append(imprimirProblemasMultiobjetivo(problemasMultiobjetivo));
+        // imprimir.append(System.lineSeparator()).append(System.lineSeparator());
+        // imprimir.append(imprimirSolucoes(solucoes));
+        // imprimir.append(System.lineSeparator()).append(System.lineSeparator());
+        // imprimir.append(listaMatrizes.stream().map(elemento -> elemento.imprimirPayoff()).collect(Collectors.joining(System.lineSeparator())));
+
+        imprimir.append(Formatadora.getTexto("Restrições", restricoes));
 
         return imprimir.toString();
     }
