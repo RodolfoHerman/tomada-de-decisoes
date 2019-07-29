@@ -118,7 +118,7 @@ public class JOEL implements Execute {
 
             for(int x = 0; x < lista.size(); x++) {
 
-                List<FuncaoObjetivo> temp = mapaObjetivos.remove(objetivos.get(x).getNome());
+                List<FuncaoObjetivo> temp = mapaObjetivos.remove(objetivos.get(x).getDescricao());
 
                 if(temp == null) {
 
@@ -127,7 +127,7 @@ public class JOEL implements Execute {
 
                 temp.add(lista.get(x));
 
-                mapaObjetivos.put(objetivos.get(x).getNome(), temp);
+                mapaObjetivos.put(objetivos.get(x).getDescricao(), temp);
             }
         }
 
@@ -187,9 +187,9 @@ public class JOEL implements Execute {
         double[][] estadosDaNatureza = new double[cenarios][dimensao];
 
         List<Double[]> intervaloCoeficientes = objetivos.stream()
-            .flatMap(objetivo -> objetivo.getProjetos()
+            .flatMap(objetivo -> objetivo.getIntervalos_coeficientes()
             .stream()
-            .map(projeto -> new Double[]{projeto.getLower_c(), projeto.getUpper_c()}))
+            .map(intervalos -> new Double[]{intervalos.getLower_c(), intervalos.getUpper_c()}))
             .collect(Collectors.toList());
 
         for(int x = 0; x < cenarios; x++) {

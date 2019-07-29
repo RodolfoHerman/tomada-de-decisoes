@@ -7,26 +7,26 @@ import it.ssc.pl.milp.ConsType;
  */
 public class Restricao {
 
-    private String nome;
+    private String descricao;
     private double[] coeficientes;
     private String sinal;
     private double valor;
     
     public Restricao() {}
 
-    public Restricao(String nome, double[] coeficientes, String sinal, double valor) {
-        this.nome = nome;
+    public Restricao(String descricao, double[] coeficientes, String sinal, double valor) {
+        this.descricao = descricao;
         this.coeficientes = coeficientes;
         this.sinal = sinal;
         this.valor = valor;
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getDescricao() {
+        return this.descricao;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public double[] getCoeficientes() {
@@ -79,7 +79,7 @@ public class Restricao {
     @Override
     public String toString() {
         return "{" +
-            " nome='" + getNome() + "'" +
+            " descricao='" + getDescricao() + "'" +
             ", coeficientes='" + getCoeficientes() + "'" +
             ", sinal='" + getSinal() + "'" +
             ", valor='" + getValor() + "'" +

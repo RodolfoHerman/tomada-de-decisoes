@@ -1,28 +1,28 @@
 package br.com.rodolfo.trabalho.models;
 
 /**
- * Projeto
+ * IntervalosCoeficiente
  */
-public class Projeto {
+public class IntervalosCoeficiente {
 
-    private String nome;
+    private String coeficiente;
     private double lower_c;
     private double upper_c;
 
-    public Projeto() {}
+    public IntervalosCoeficiente() {}
 
-    public Projeto(String nome, double lower_c, double upper_c) {
-        this.nome = nome;
+    public IntervalosCoeficiente(String coeficiente, double lower_c, double upper_c) {
+        this.coeficiente = coeficiente;
         this.lower_c = lower_c;
         this.upper_c = upper_c;
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getCoeficiente() {
+        return this.coeficiente;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setCoeficiente(String coeficiente) {
+        this.coeficiente = coeficiente;
     }
 
     public double getLower_c() {
@@ -44,7 +44,7 @@ public class Projeto {
     @Override
     public String toString() {
         return "{" +
-            " nome='" + getNome() + "'" +
+            " coeficiente='" + getCoeficiente() + "'" +
             ", lower_c='" + getLower_c() + "'" +
             ", upper_c='" + getUpper_c() + "'" +
             "}";

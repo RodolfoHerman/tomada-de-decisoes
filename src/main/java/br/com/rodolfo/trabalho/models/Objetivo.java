@@ -9,24 +9,24 @@ import it.ssc.pl.milp.GoalType;
  */
 public class Objetivo {
 
-    private String nome;
+    private String descricao;
     private String maximizar;
-    private List<Projeto> projetos;
+    private List<IntervalosCoeficiente> intervalos_coeficientes;
 
     public Objetivo() {}
 
-    public Objetivo(String nome, String maximizar, List<Projeto> projetos) {
-        this.nome = nome;
+    public Objetivo(String descricao, String maximizar, List<IntervalosCoeficiente> intervalos_coeficientes) {
+        this.descricao = descricao;
         this.maximizar = maximizar;
-        this.projetos = projetos;
+        this.intervalos_coeficientes = intervalos_coeficientes;
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getDescricao() {
+        return this.descricao;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getMaximizar() {
@@ -37,12 +37,12 @@ public class Objetivo {
         this.maximizar = maximizar;
     }
 
-    public List<Projeto> getProjetos() {
-        return this.projetos;
+    public List<IntervalosCoeficiente> getIntervalos_coeficientes() {
+        return this.intervalos_coeficientes;
     }
 
-    public void setProjetos(List<Projeto> projetos) {
-        this.projetos = projetos;
+    public void setIntervalos_coeficientes(List<IntervalosCoeficiente> intervalos_coeficientes) {
+        this.intervalos_coeficientes = intervalos_coeficientes;
     }
 
     public String getMinMaxNominal() {
@@ -58,9 +58,9 @@ public class Objetivo {
     @Override
     public String toString() {
         return "{" +
-            " nome='" + getNome() + "'" +
+            " descricao='" + getDescricao() + "'" +
             ", maximizar='" + getMaximizar() + "'" +
-            ", projetos='" + getProjetos() + "'" +
+            ", intervalos_coeficientes='" + getIntervalos_coeficientes() + "'" +
             "}";
     }
 

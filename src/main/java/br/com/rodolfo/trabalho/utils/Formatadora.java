@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 import br.com.rodolfo.trabalho.models.FuncaoObjetivo;
 import br.com.rodolfo.trabalho.models.Matriz;
 import br.com.rodolfo.trabalho.models.Objetivo;
-import br.com.rodolfo.trabalho.models.Projeto;
+import br.com.rodolfo.trabalho.models.IntervalosCoeficiente;
 import br.com.rodolfo.trabalho.models.Restricao;
 
 /**
@@ -324,16 +324,16 @@ public class Formatadora {
         StringBuilder texto = new StringBuilder();
         StringBuilder desc  = new StringBuilder();
 
-        desc.append("(").append(objetivo.getNome()).append(")").append(" ").append(objetivo.getMinMaxNominal()).append(System.lineSeparator()).append(System.lineSeparator());
+        desc.append("(").append(objetivo.getDescricao()).append(")").append(" ").append(objetivo.getMinMaxNominal()).append(System.lineSeparator()).append(System.lineSeparator());
 
         texto.append("Coef.").append(" ").append("C'").append(" ").append("C''").append(System.lineSeparator());
         
-        for(Projeto projeto : objetivo.getProjetos()) {
+        for(IntervalosCoeficiente intervalosCoeficiente : objetivo.getIntervalos_coeficientes()) {
 
-            texto.append(projeto.getNome()).append(" ")
-                 .append(Metodos.formatarNumero(projeto.getLower_c()))
+            texto.append(intervalosCoeficiente.getCoeficiente()).append(" ")
+                 .append(Metodos.formatarNumero(intervalosCoeficiente.getLower_c()))
                  .append(" ")
-                 .append(Metodos.formatarNumero(projeto.getUpper_c()))
+                 .append(Metodos.formatarNumero(intervalosCoeficiente.getUpper_c()))
                  .append(System.lineSeparator());
         }
 
@@ -354,7 +354,7 @@ public class Formatadora {
 
         for(Restricao restricao : restricoes) {
 
-            linhaForma.append("(").append(restricao.getNome()).append(") ");
+            linhaForma.append("(").append(restricao.getDescricao()).append(") ");
             double[] valores = restricao.getCoeficientes();
 
             for(Integer x = 0; x < valores.length; x++) {
