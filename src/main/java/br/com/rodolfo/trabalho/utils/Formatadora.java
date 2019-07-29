@@ -95,6 +95,13 @@ public class Formatadora {
                 ).collect(Collectors.joining(System.lineSeparator())));
 
             break;
+
+            case MATRIZ_AGREGADA:
+
+                double[][] agregada = (double[][]) object;
+                resp.append(getTextoAgregada("Matriz com os níveis agregados dos critérios de escolha fuzzy.", agregada));
+
+            break;
         
             default:
 
@@ -107,6 +114,45 @@ public class Formatadora {
         return resp.toString();
     }
 
+    
+    private static String getTextoAgregada(String descricao, double[][] agregada) {
+        
+        List<List<String>> dados = new ArrayList<>();
+        StringBuilder texto = new StringBuilder(criarDescricao(descricao));
+
+        StringBuilder linhaForma = new StringBuilder();
+
+        linhaForma.append(" ").append("WALD").append(" ").append("LAPLACE").append(" ").append("SAVEGE").append(" ").append("HURWICZ").append(System.lineSeparator());
+
+        for(int x = 0; x < agregada.length; x++) {
+
+            linhaForma.append("X").append(x + 1).append(" ");
+
+            for(int y = 0; y < agregada[0].length; y++) {
+
+                linhaForma.append(Metodos.formatarNumero(agregada[x][y])).append(" ");
+            }
+
+            linhaForma.append(System.lineSeparator());
+        }
+
+        linhaForma.append(System.lineSeparator()).append("MAX").append(" ");
+
+        for(Double valor : Metodos.getMaxColunas(agregada) ){
+
+            linhaForma.append(Metodos.formatarNumero(valor)).append(" ");
+        }
+
+        linhaForma.append(System.lineSeparator());
+
+        for (String linha : Arrays.asList(linhaForma.toString().split(System.lineSeparator()))) {
+            dados.add(Arrays.asList(linha.split(" ")));
+        }
+
+        return texto.append(criarTabulacao(dados)).toString();
+    }
+
+    
     private static String getTextoCriterios(String descricao, String textoInicial, double[][] criterios, double[][] minMaxCriterios) {
         
         List<List<String>> dados = new ArrayList<>();

@@ -60,9 +60,47 @@ public class JOEL implements Execute {
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.PAYOFF));
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA));
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA_MOD));
+        imprimir.append(Formatadora.getTexto(criarMatrizAgregada(listaMatrizes), ImpressaoTipo.MATRIZ_AGREGADA));
 
 
         return imprimir.toString();
+    }
+
+    private double[][] criarMatrizAgregada(List<Matriz> listaMatrizes) {
+        
+        List<double[][]> matrizes = listaMatrizes.stream().map(matriz -> matriz.getMatrizCriteriosDeEscolhaModificada()).collect(Collectors.toList());
+        
+        int qtdLinhas  = matrizes.get(0).length;
+        int qtdColunas = matrizes.get(0)[0].length;
+        
+        double[][] resposta = criarMatrizNeutra(qtdLinhas, qtdColunas);
+
+        matrizes.stream().forEach(matriz -> {
+
+            for(int x = 0; x < qtdLinhas; x++) {
+                for(int y = 0; y < qtdColunas; y++) {
+
+                    resposta[x][y] = resposta[x][y] < matriz[x][y] ? resposta[x][y] : matriz[x][y];
+                }
+            }
+
+        });
+
+        return resposta;
+    }
+
+    private double[][] criarMatrizNeutra(int qtdLinhas, int qtdColunas) {
+        
+        double[][] neutra = new double[qtdLinhas][qtdColunas];
+
+        for(int x = 0; x < neutra.length; x++) {
+            for(int y = 0; y < neutra[0].length; y++) {
+
+                neutra[x][y] = 1.0;
+            }
+        }
+
+        return neutra;
     }
 
     private List<Double[]> extrairSolucoes(List<Map<String,Double[]>> solucoes) {

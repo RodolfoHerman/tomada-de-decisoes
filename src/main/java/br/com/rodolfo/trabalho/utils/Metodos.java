@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import it.ssc.pl.milp.GoalType;
 
@@ -13,6 +15,13 @@ import it.ssc.pl.milp.GoalType;
  */
 public class Metodos {
 
+    public static List<Double> getMaxColunas(double[][] matriz) {
+        
+        return IntStream.range(0, matriz[0].length).boxed()
+            .map(indice -> Stream.of(matriz).map(elementos -> elementos[indice]).mapToDouble(d -> d).max().orElse(0.0))        
+            .collect(Collectors.toList());
+    }
+    
     public static boolean verificarArquivos(List<String> arquivos, String[] lista) {
         
         int qtd = arquivos.size();

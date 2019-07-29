@@ -12,6 +12,7 @@ public enum ImpressaoTipo {
     SOLUCOES,
     PAYOFF,
     CRITERIOS_ESCOLHA,
-    CRITERIOS_ESCOLHA_MOD
+    CRITERIOS_ESCOLHA_MOD,
+    MATRIZ_AGREGADA
     
 }
