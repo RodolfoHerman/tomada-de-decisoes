@@ -81,23 +81,36 @@ public class Formatadora {
                 List<Matriz> listaMatrizesCriterios = (List<Matriz>) object;
                 resp.append(criarDescricao("Matrizes com critérios de escolha."));
                 resp.append(listaMatrizesCriterios.stream().map(matriz -> 
-                    getTextoCriterios(matriz.getDescricao(), matriz.getMatrizCriteriosDeEscolha(), matriz.getMinMaxCriterios())
+                    getTextoCriterios(matriz.getDescricao(), "- Critérios de escolha para : ", matriz.getMatrizCriteriosDeEscolha(), matriz.getMinMaxCriterios())
+                ).collect(Collectors.joining(System.lineSeparator())));
+
+            break;
+
+            case CRITERIOS_ESCOLHA_MOD:
+
+                List<Matriz> listaMatrizesCriteriosMod = (List<Matriz>) object;
+                resp.append(criarDescricao("Matrizes modificadas com critérios de escolha."));
+                resp.append(listaMatrizesCriteriosMod.stream().map(matriz -> 
+                    getTextoCriterios(matriz.getDescricao(), "- Critérios de escolha modificados para : ", matriz.getMatrizCriteriosDeEscolhaModificada(), null)
                 ).collect(Collectors.joining(System.lineSeparator())));
 
             break;
         
             default:
-                break;
+
+                resp.append(criarDescricao("Impressão não disponível para : ")).append(tipo.name());
+
+            break;
         }
 
 
         return resp.toString();
     }
 
-    private static String getTextoCriterios(String descricao, double[][] criterios, double[][] minMaxCriterios) {
+    private static String getTextoCriterios(String descricao, String textoInicial, double[][] criterios, double[][] minMaxCriterios) {
         
         List<List<String>> dados = new ArrayList<>();
-        StringBuilder texto  = new StringBuilder("- Critérios de escolha para : ");
+        StringBuilder texto  = new StringBuilder(textoInicial);
 
         StringBuilder linhaForma = new StringBuilder();
 
@@ -116,23 +129,26 @@ public class Formatadora {
 
             linhaForma.append(System.lineSeparator());
         }
-        
-        linhaForma.append(System.lineSeparator()).append("MIN").append(" ");
-        
-        for(int x = 0; x < minMaxCriterios.length; x++) {
 
-            linhaForma.append(Metodos.formatarNumero(minMaxCriterios[x][0])).append(" ");
+        if(minMaxCriterios != null) {
+
+            linhaForma.append(System.lineSeparator()).append("MIN").append(" ");
+            
+            for(int x = 0; x < minMaxCriterios.length; x++) {
+    
+                linhaForma.append(Metodos.formatarNumero(minMaxCriterios[x][0])).append(" ");
+            }
+    
+            linhaForma.append(System.lineSeparator()).append("MAX").append(" ");
+            
+            for(int x = 0; x < minMaxCriterios.length; x++) {
+    
+                linhaForma.append(Metodos.formatarNumero(minMaxCriterios[x][1])).append(" ");
+            }
+    
+            linhaForma.append(System.lineSeparator());
         }
-
-        linhaForma.append(System.lineSeparator()).append("MAX").append(" ");
         
-        for(int x = 0; x < minMaxCriterios.length; x++) {
-
-            linhaForma.append(Metodos.formatarNumero(minMaxCriterios[x][1])).append(" ");
-        }
-
-        linhaForma.append(System.lineSeparator());
-
         for (String linha : Arrays.asList(linhaForma.toString().split(System.lineSeparator()))) {
             dados.add(Arrays.asList(linha.split(" ")));
         }

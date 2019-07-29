@@ -35,6 +35,31 @@ public class Matriz {
         this.criteriosDeEscolha = Arrays.asList(calcularCriterioWald(), calcularCriterioLaplace(), calcularCriterioSavage(), calcularCriterioHurwicz());
     }
 
+    public double[][] getMatrizCriteriosDeEscolhaModificada() {
+        
+        double max = this.criteriosDeEscolha.stream().map(elementos -> elementos.stream().mapToDouble(d -> d).max().orElse(0.0)).collect(Collectors.toList()).stream().mapToDouble(d -> d).max().orElse(0.0);
+        double min = this.criteriosDeEscolha.stream().map(elementos -> elementos.stream().mapToDouble(d -> d).min().orElse(0.0)).collect(Collectors.toList()).stream().mapToDouble(d -> d).min().orElse(0.0);
+
+        double divisor = (max - min) == 0.0 ? 1.0 : (max - min);
+
+        if(this.tipo == GoalType.MAX) {
+
+            return IntStream.range(0, this.criteriosDeEscolha.get(0).size())
+                .boxed()
+                .map(indice -> this.criteriosDeEscolha.stream().mapToDouble(ele -> ((ele.get(indice).doubleValue() - min)/divisor)).toArray())
+                .toArray(double[][]::new);
+
+
+        } else {
+
+            return IntStream.range(0, this.criteriosDeEscolha.get(0).size())
+                .boxed()
+                .map(indice -> this.criteriosDeEscolha.stream().mapToDouble(ele -> ((max - ele.get(indice).doubleValue())/divisor)).toArray())
+                .toArray(double[][]::new);
+        }
+
+    }
+
     public double[][] getMinMaxCriterios() {
         
         // Sem transposta do List<List<Double>> criteriosDeEscolha

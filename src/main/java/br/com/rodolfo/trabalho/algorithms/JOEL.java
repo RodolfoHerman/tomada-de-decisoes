@@ -59,6 +59,7 @@ public class JOEL implements Execute {
         imprimir.append(Formatadora.getTexto(solucoes, ImpressaoTipo.SOLUCOES));
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.PAYOFF));
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA));
+        imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA_MOD));
 
 
         return imprimir.toString();
