@@ -10,7 +10,6 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import br.com.rodolfo.trabalho.utils.Metodos;
 import it.ssc.pl.milp.GoalType;
 
 /**
@@ -34,6 +33,52 @@ public class Matriz {
 
         this.payoff = criarPayoff();
         this.criteriosDeEscolha = Arrays.asList(calcularCriterioWald(), calcularCriterioLaplace(), calcularCriterioSavage(), calcularCriterioHurwicz());
+    }
+
+    public double[][] getMinMaxCriterios() {
+        
+        // Sem transposta do List<List<Double>> criteriosDeEscolha
+        return this.criteriosDeEscolha.stream()
+            .map(elementos -> elementos.stream().collect(Collectors.summarizingDouble(Double::doubleValue)))
+            .map(sumario -> new double[]{sumario.getMin(), sumario.getMax()})
+            .toArray(double[][]::new);
+    }
+
+    public String getDescricao() {
+        
+        return this.descricao;
+    }
+
+    public double[][] getPayoff() {
+
+        return this.payoff;
+    }
+
+    public double[][] getMatrizCriteriosDeEscolha() {
+
+        // Fazer a transposta do List<List<Double>> criteriosDeEscolha
+        return IntStream.range(0, this.criteriosDeEscolha.get(0).size())
+            .boxed()
+            .map(indice -> this.criteriosDeEscolha.stream().mapToDouble(ele -> ele.get(indice).doubleValue()).toArray())
+            .toArray(double[][]::new);
+            //.toArray(i -> new double[i][]);
+            
+        // int linhas  = this.criteriosDeEscolha.get(0).size();
+        // int colunas = this.criteriosDeEscolha.size();
+
+        // double[][] resp = new double[linhas][colunas];
+
+        // for(int x = 0; x < linhas; x++) {
+        //     for(int y = 0; y < colunas; y++) {
+
+        //         resp[x][y] = this.criteriosDeEscolha.get(y).get(x).doubleValue();
+        //     }
+        // }
+
+        // return criteriosDeEscolha
+        //     .stream()
+        //     .map(elementos -> elementos.stream().mapToDouble(d -> d).toArray())
+        //     .toArray(tamanho -> new double[tamanho][]);
     }
 
     private double[][] criarPayoff() {
@@ -93,63 +138,5 @@ public class Matriz {
 
             return (new BigDecimal(((0.75 * sumario.getMax()) + (0.25 * sumario.getMin())))).setScale(2, RoundingMode.HALF_UP).doubleValue();
         }).collect(Collectors.toList());
-    }
-
-    public String imprimirPayoff() {
-
-        StringBuilder imprimir = new StringBuilder();
-        
-        int linhas  = this.payoff.length;
-        int colunas = this.payoff[0].length;
-
-        imprimir.append("######").append(" Matriz payoff para: ").append(this.descricao).append(" ######").append(System.lineSeparator()).append(System.lineSeparator());
-
-        imprimir.append("  ").append("\t\t");
-
-        for(int x = 1; x <= colunas; x++) {
-
-            imprimir.append(" Y").append(x).append(" \t\t");
-        }
-
-        imprimir.append(System.lineSeparator());
-
-        for(int x = 0; x < linhas; x++) {
-
-            imprimir.append("X").append(x+1).append("\t\t");
-
-            for(int y = 0; y < colunas; y++) {
-
-                imprimir.append(Metodos.formatarNumero(this.payoff[x][y])).append("\t\t");
-            }
-
-            imprimir.append(System.lineSeparator());
-        }
-
-        return imprimir.toString();
-    }
-
-    public String imprimirCriteriosDeEscolha() {
-        
-        StringBuilder imprimir = new StringBuilder();
-
-        int linhas  = this.criteriosDeEscolha.size();
-        int colunas = this.criteriosDeEscolha.get(0).size();
-
-        imprimir.append("######").append(" Matriz de critérios de escolha para: ").append(this.descricao).append("######").append(System.lineSeparator()).append(System.lineSeparator());
-        imprimir.append("  ").append("\t\t").append(" WAL. ").append("\t\t").append(" LAP. ").append("\t\t").append(" SAV. ").append("\t\t").append(" HUR. ").append(System.lineSeparator());
-        
-        for(int x = 0; x < linhas; x++) {
-
-            imprimir.append("X").append(x+1).append("\t\t");
-
-            for(int y = 0; y < colunas; y++) {
-
-                imprimir.append(Metodos.formatarNumero(this.criteriosDeEscolha.get(x).get(y))).append("\t\t");
-            }
-
-            imprimir.append(System.lineSeparator());
-        }
-
-        return imprimir.toString();
     }
 }

@@ -53,7 +53,7 @@ public class FuncaoObjetivo {
         AtomicInteger contador = new AtomicInteger(1);
         
         String textual = Stream.of(coeficientes)
-            .map(coeficiente -> coeficiente + "*X" + contador.getAndIncrement())
+            .map(coeficiente -> Metodos.formatarNumero(coeficiente.doubleValue()) + "*X" + contador.getAndIncrement())
             .collect(Collectors.joining(" + "));
 
         return textual.concat("  ---> ").concat(Metodos.getMinMaxNominal(tipo));

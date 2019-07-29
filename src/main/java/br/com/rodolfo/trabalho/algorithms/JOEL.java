@@ -4,22 +4,19 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
-import java.util.stream.Stream;
 
 import br.com.rodolfo.trabalho.algorithms.sequence.Sobol;
 import br.com.rodolfo.trabalho.models.FuncaoObjetivo;
 import br.com.rodolfo.trabalho.models.Matriz;
 import br.com.rodolfo.trabalho.models.Objetivo;
-import br.com.rodolfo.trabalho.models.Projeto;
 import br.com.rodolfo.trabalho.models.Restricao;
 import br.com.rodolfo.trabalho.models.Solucao;
 import br.com.rodolfo.trabalho.utils.Formatadora;
+import br.com.rodolfo.trabalho.utils.ImpressaoTipo;
 import br.com.rodolfo.trabalho.utils.Metodos;
 import it.ssc.pl.milp.GoalType;
 
@@ -55,18 +52,14 @@ public class JOEL implements Execute {
             return new Matriz(entry.getKey(), entry.getValue(), solucoesExtraidas);
         }).collect(Collectors.toList());
 
-        // imprimir.append(imprimirRestricoes());
-        // imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        // imprimir.append(imprimirObjetivos());
-        // imprimir.append(imprimirEstadosDaNatureza(estadosNatureza));
-        // imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        // imprimir.append(imprimirProblemasMultiobjetivo(problemasMultiobjetivo));
-        // imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        // imprimir.append(imprimirSolucoes(solucoes));
-        // imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        // imprimir.append(listaMatrizes.stream().map(elemento -> elemento.imprimirPayoff()).collect(Collectors.joining(System.lineSeparator())));
+        imprimir.append(Formatadora.getTexto(restricoes, ImpressaoTipo.RESTRICAO));
+        imprimir.append(Formatadora.getTexto(objetivos, ImpressaoTipo.OBJETIVOS));
+        imprimir.append(Formatadora.getTexto(estadosNatureza, ImpressaoTipo.ESTADOS_NATUREZA));
+        imprimir.append(Formatadora.getTexto(problemasMultiobjetivo, ImpressaoTipo.PROBLEMAS_MULTIOBJETIVO));
+        imprimir.append(Formatadora.getTexto(solucoes, ImpressaoTipo.SOLUCOES));
+        imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.PAYOFF));
+        imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA));
 
-        imprimir.append(Formatadora.getTexto("Restrições", restricoes));
 
         return imprimir.toString();
     }
@@ -148,7 +141,7 @@ public class JOEL implements Execute {
         return funcoesObjetivo;
     }
 
-    public double[][] representarEstadosDaNatureza() {
+    private double[][] representarEstadosDaNatureza() {
         
         int dimensao = getDimensaoSobol();
         double[][] sobol  = (new Sobol()).generate((cenarios + 1), dimensao);
@@ -188,144 +181,6 @@ public class JOEL implements Execute {
     private List<GoalType> getListaDeTipos() {
 
         return objetivos.stream().map(objetivo -> objetivo.getMinMaxTipo()).collect(Collectors.toList());
-    }
-
-    private String imprimirRestricoes() {
-        
-        StringBuilder imprimir = new StringBuilder();
-        List<String> temp = new ArrayList<>();
-
-        imprimir.append("######").append(" Restrições ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
-
-        this.restricoes.stream().forEach(restricao -> {
-
-            imprimir.append("(").append(restricao.getNome()).append(")").append("\t");
-            Integer posicao = 1;
-            temp.clear();
-
-            for(Double valor : restricao.getCoeficientes()) {
-
-                temp.add("".concat(valor.toString()).concat("*X").concat(posicao.toString()));
-                posicao++;
-            }
-
-            imprimir.append(String.join(" + ", temp)).append(" ").append(restricao.getSinal()).append(" ").append(restricao.getValor());
-            imprimir.append(System.lineSeparator());
-
-        });
-
-        return imprimir.toString();
-    }
-
-    private String imprimirObjetivos() {
-        
-        StringBuilder imprimir = new StringBuilder();
-
-        imprimir.append("######").append(" Informações iniciais para construção das funções objetivo (intervalos dos coeficientes). ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
-
-        this.objetivos.stream().forEach(objetivo -> {
-
-            imprimir.append("(").append(objetivo.getNome()).append(")").append("\t")
-                .append(objetivo.getMinMaxNominal())
-                .append(System.lineSeparator()).append(System.lineSeparator())
-                .append("Coef")
-                .append("\t\t")
-                .append("C'")
-                .append("\t\t\t\t")
-                .append("C''")
-                .append(System.lineSeparator());
-
-            for(Projeto projeto : objetivo.getProjetos()) {
-
-                imprimir.append(" ").append(projeto.getNome()).append("\t\t").append(Metodos.formatarNumero(projeto.getLower_c()))
-                    .append("\t\t\t").append(Metodos.formatarNumero(projeto.getUpper_c()))
-                    .append(System.lineSeparator());
-            }
-
-            imprimir.append(System.lineSeparator()).append(System.lineSeparator());
-        });
-
-        return imprimir.toString();
-    }
-
-    private String imprimirEstadosDaNatureza(double[][] estados) {
-        
-        StringBuilder imprimir = new StringBuilder();
-
-        imprimir.append("######").append(" Representação dos estados da Natureza ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
-
-        imprimir.append("s").append("\t\t");
-
-        for(int x = 0; x < estados[0].length; x++) {
-            
-            imprimir.append(" t = ").append(x+1).append(" \t\t");
-        }
-
-        imprimir.append(System.lineSeparator());
-
-        for(int x = 0; x < estados.length; x++) {
-
-            imprimir.append(x + 1).append("\t\t");
-
-            for(int y = 0; y < estados[0].length; y++) {
-
-                imprimir.append(Metodos.formatarNumero(estados[x][y])).append("\t\t");
-            }
-
-            imprimir.append(System.lineSeparator());
-        }
-
-        return imprimir.toString();
-    }
-
-    private String imprimirProblemasMultiobjetivo(List<List<FuncaoObjetivo>> funcoesObjetivo) {
-        
-        StringBuilder imprimir = new StringBuilder();
-
-        imprimir.append("######").append(" Problemas Multiobjetivo ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
-
-        funcoesObjetivo.stream().forEach(funcao -> {
-            
-            for(int x = 0; x < funcao.size(); x++) {
-
-                imprimir.append(funcao.get(x).getDescricao()).append(" F").append(x+1).append("(X) = ").append(funcao.get(x).toString()).append(System.lineSeparator());
-            }
-
-            imprimir.append(System.lineSeparator());
-        });
-
-        return imprimir.toString();
-    }
-
-    private String imprimirSolucoes(List<Map<String,Double[]>> solucoes) {
-        
-        StringBuilder imprimir = new StringBuilder();
-        AtomicInteger contador = new AtomicInteger(1);
-
-        imprimir.append("######").append(" Possíveis soluções. ").append("######").append(System.lineSeparator()).append(System.lineSeparator());
-
-        imprimir.append(solucoes.stream().map(solucao -> {
-
-            StringBuilder temp = new StringBuilder();
-            Iterator<Map.Entry<String,Double[]>> entries = solucao.entrySet().iterator();
-            Map.Entry<String,Double[]> entry = entries.next();
-
-            temp.append("-> ").append("s = ").append(contador.getAndIncrement()).append(" : \t");
-            
-            for(int x = 0; x < entry.getValue().length; x++) {
-
-                temp.append("X").append(x+1).append(" = ").append(Metodos.formatarNumero(entry.getValue()[x])).append("  \t");
-            }
-
-            temp.append(entry.getKey());
-
-            return temp.toString();
-
-        }).collect(Collectors.joining(System.lineSeparator())));
-
-        imprimir.append(System.lineSeparator());
-
-        return imprimir.toString();
     }
 
 }
