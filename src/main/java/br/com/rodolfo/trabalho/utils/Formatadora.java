@@ -359,7 +359,7 @@ public class Formatadora {
 
             for(Integer x = 0; x < valores.length; x++) {
 
-                expressao.add(Metodos.formatarNumero(valores[x]).concat("*X").concat(x.toString()));
+                expressao.add(Metodos.formatarNumero(valores[x]).concat("*X").concat(""+(x+1)));
             }
 
             linhaForma.append(String.join(" + ", expressao)).append(" ").append(restricao.getSinal()).append(" ").append(restricao.getValor()).append(System.lineSeparator());

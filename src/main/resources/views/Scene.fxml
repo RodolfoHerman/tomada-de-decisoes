@@ -31,7 +31,7 @@
       </MenuBar>
    </top>
    <center>
-      <TextArea fx:id="textArea" editable="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TextArea fx:id="textArea" editable="false" prefHeight="200.0" prefWidth="200.0" stylesheets="@../styles/Styles.css" BorderPane.alignment="CENTER">
          <font>
             <Font name="Times New Roman" size="14.0" />
          </font>
