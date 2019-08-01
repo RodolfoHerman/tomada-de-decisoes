@@ -143,11 +143,11 @@ public class Matriz {
                 
                 if(this.tipo == GoalType.MAX) {
 
-                    return (new BigDecimal(sumariosColunas.get(x).getMax() - row[x])).setScale(2, RoundingMode.HALF_UP).doubleValue();
+                    return (new BigDecimal(sumariosColunas.get(x).getMax() - row[x])).setScale(4, RoundingMode.HALF_UP).doubleValue();
 
                 } else {
 
-                    return (new BigDecimal(row[x] - sumariosColunas.get(x).getMin())).setScale(2, RoundingMode.HALF_UP).doubleValue();    
+                    return (new BigDecimal(row[x] - sumariosColunas.get(x).getMin())).setScale(4, RoundingMode.HALF_UP).doubleValue();    
                 }
             }).toArray(Double[]::new);
         }).map(elementos -> Stream.of(elementos).mapToDouble(d -> d.doubleValue()))
@@ -161,7 +161,7 @@ public class Matriz {
 
             DoubleSummaryStatistics sumario =  DoubleStream.of(row).boxed().collect(Collectors.summarizingDouble(Double::doubleValue));
 
-            return (new BigDecimal(((0.75 * sumario.getMax()) + (0.25 * sumario.getMin())))).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            return (new BigDecimal(((0.75 * sumario.getMax()) + (0.25 * sumario.getMin())))).setScale(4, RoundingMode.HALF_UP).doubleValue();
         }).collect(Collectors.toList());
     }
 }

@@ -213,7 +213,7 @@ public class JOEL implements Execute {
     private double cacularInterpolacao(Double[] intervalo, double valor) {
         
         return ((new BigDecimal(intervalo[0] + ((intervalo[1] - intervalo[0]) * valor)))
-            .setScale(2, RoundingMode.HALF_UP))
+            .setScale(4, RoundingMode.HALF_UP))
             .doubleValue();
     }
 

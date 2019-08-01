@@ -1,5 +1,7 @@
 package br.com.rodolfo.trabalho.utils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -88,7 +90,14 @@ public class Metodos {
 
     public static String formatarNumero(double numero) {
 
-        return String.format("%.2f", numero);
+        return String.format("%.4f", numero);
+    }
+
+    public static Double trucarNumero(Double numero) {
+        
+        return ((new BigDecimal(numero))
+            .setScale(4, RoundingMode.HALF_UP))
+            .doubleValue();
     }
 
     private Metodos() {}
