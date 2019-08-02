@@ -35,14 +35,10 @@ public class Solucao {
 
     public void solucao(List<FuncaoObjetivo> funcoes) throws Exception {
 
-        for(int x = 0; x < funcoes.size(); x++) {
+        for(FuncaoObjetivo funcao : funcoes) {
 
-            // Resolucao MIN
-            resolverSimplex(funcoes.get(x), GoalType.MIN);
-            // Resolucao MIN
-            resolverSimplex(funcoes.get(x), GoalType.MAX);
-
-            System.out.println(funcoes.get(x).simplexResolucao());
+            funcao.resolverSimplex();
+            System.out.println(funcao.simplexResolucao());
         }
 
         List<List<Double>> muD_min = new ArrayList<>();
@@ -58,6 +54,10 @@ public class Solucao {
                 f_muD_min.add(funcY.calcularMu(funcX.getX_min()));
                 f_muD_max.add(funcY.calcularMu(funcX.getX_max()));
             }
+
+            System.out.println(f_muD_min.stream().max(Double::compareTo).orElse(1.0));
+            System.out.println(f_muD_max.stream().min(Double::compareTo).orElse(0.0));
+            System.out.println();
 
             muD_min.add(f_muD_min);
             muD_max.add(f_muD_max);
@@ -114,59 +114,6 @@ public class Solucao {
     private String criarRespostaTextual(List<FuncaoObjetivo> funcoes) {
         
         return funcoes.stream().map(funcao -> funcao.getDescricao()).collect(Collectors.joining(" e ", " para ", "."));
-    }
-
-    private ArrayList<Constraint> getRestricoes() throws SimplexException {
-        
-        ArrayList<Constraint> constraints = new ArrayList<>();
-
-        for(int x = 0; x < restricoesCoeficientes.length; x++) {
-
-            constraints.add(new Constraint(this.restricoesCoeficientes[x], this.restricoesSinais[x], this.restricoesValores[x]));
-        }
-
-        return constraints;
-    }
-
-    private void resolverSimplex(FuncaoObjetivo funcao, GoalType tipo) throws Exception {
-        
-        LinearObjectiveFunction linearFunction = new LinearObjectiveFunction(funcao.getCoeficientes(), tipo);
-        LP lp = new LP(linearFunction, getRestricoes());
-        SolutionType solutionType = lp.resolve();
-
-        if(solutionType == SolutionType.OPTIMUM) { 
-
-            Solution solution = lp.getSolution();
-
-            if(tipo.equals(GoalType.MIN)) {
-
-                funcao.setX_min(getCoeficientes(solution.getVariables()));
-                funcao.setZ_min(solution.getOptimumValue());
-
-            } else {
-
-                funcao.setX_max(getCoeficientes(solution.getVariables()));
-                funcao.setZ_max(solution.getOptimumValue());
-            }
-
-        } else {
-
-            throw new Exception("Erro, solução ótima não encontrada para : ".concat(funcao.toString()));
-        }
-    }
-
-    private Double[] getCoeficientes(Variable[] variaveis) {
-        
-        Map<String,Double> mapa = Stream.of(variaveis).collect(Collectors.toMap(Variable::getName, Variable::getValue));
-
-        Double[] resp = new Double[mapa.size()];
-
-        for(int x = 0; x < resp.length; x++) {
-
-            resp[x] = mapa.get("X"+(x+1));
-        }
-
-        return resp;
     }
 
     

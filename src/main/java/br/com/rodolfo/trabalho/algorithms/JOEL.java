@@ -163,7 +163,7 @@ public class JOEL implements Execute {
 
                     String descricao = "(" + contador.getAndIncrement() + ")";
                     
-                    FuncaoObjetivo fObjetivo = new FuncaoObjetivo(descricao, elemento.get(x), listaDeTipos.get(x));
+                    FuncaoObjetivo fObjetivo = new FuncaoObjetivo(descricao, elemento.get(x), listaDeTipos.get(x), restricoes);
 
                     array.add(fObjetivo);
                 }
