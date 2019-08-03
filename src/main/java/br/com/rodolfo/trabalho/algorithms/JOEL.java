@@ -3,6 +3,7 @@ package br.com.rodolfo.trabalho.algorithms;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,8 @@ public class JOEL implements Execute {
         List<List<FuncaoObjetivo>> problemasMultiobjetivo = criarProblemasMultiobjetivo(estadosNatureza, tamanhoParticao, listaDeTipos);
         List<Map<String,Double[]>> solucoes = criarSolucoes(problemasMultiobjetivo);
         Map<String,List<FuncaoObjetivo>> mapaFuncoes = extrairFuncoesObjetivos(problemasMultiobjetivo);
-        List<Double[]> solucoesExtraidas = extrairSolucoes(solucoes);
+        List<Map<String,Double[]>> solucoesUnicas = extrairSolucoesUnicas(solucoes);
+        List<Double[]> solucoesExtraidas = extrairSolucoes(solucoesUnicas);
         List<Matriz> listaMatrizes = mapaFuncoes.entrySet().stream().map(entry -> {
             return new Matriz(entry.getKey(), entry.getValue(), solucoesExtraidas);
         }).collect(Collectors.toList());
@@ -57,6 +59,7 @@ public class JOEL implements Execute {
         imprimir.append(Formatadora.getTexto(estadosNatureza, ImpressaoTipo.ESTADOS_NATUREZA));
         imprimir.append(Formatadora.getTexto(problemasMultiobjetivo, ImpressaoTipo.PROBLEMAS_MULTIOBJETIVO));
         imprimir.append(Formatadora.getTexto(solucoes, ImpressaoTipo.SOLUCOES));
+        imprimir.append(Formatadora.getTexto(solucoesUnicas, ImpressaoTipo.SOLUCOES_UNICAS));
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.PAYOFF));
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA));
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA_MOD));
@@ -103,6 +106,25 @@ public class JOEL implements Execute {
         return neutra;
     }
 
+    
+    public List<Map<String,Double[]>> extrairSolucoesUnicas(List<Map<String,Double[]>> solucoes) {
+        
+        // solucoes.stream().flatMap(elemento ->
+        //         elemento.entrySet().stream().map(Map.Entry::getValue)
+        //     ).collect(Collectors.toMap(el -> Arrays.hashCode(el), el -> el, (val1, val2) -> val1));
+        
+        Map<Integer,Map<String,Double[]>> solucoesUnicas = new HashMap<>();
+
+        for(Map<String,Double[]> solucao : solucoes) {
+
+            Double[] t = solucao.entrySet().stream().map(entry -> entry.getValue()).findFirst().get();
+
+            solucoesUnicas.put(Arrays.hashCode(t), solucao);
+        }
+
+        return solucoesUnicas.entrySet().stream().map(entry -> entry.getValue()).collect(Collectors.toList());
+    }
+    
     private List<Double[]> extrairSolucoes(List<Map<String,Double[]>> solucoes) {
 
         return solucoes.stream().flatMap(elemento ->

@@ -22,7 +22,7 @@ public class HeuristicaRelogio {
         return (posicao + passo) <= limite;
     }
 
-    public static Double getMuD_max(List<FuncaoObjetivo> funcoes, Double[] coeficientesX) {
+    private static Double getMuD_max(List<FuncaoObjetivo> funcoes, Double[] coeficientesX) {
         
         List<Double> muD = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class HeuristicaRelogio {
 
     private static boolean isPassoMelhor(List<FuncaoObjetivo> funcoes, Double[] posicaoOrigem, Double[] posicaoDestino) {
         
-        return getMuD_max(funcoes, posicaoDestino) > getMuD_max(funcoes, posicaoOrigem) ? true : false;
+        return getMuD_max(funcoes, posicaoDestino) > getMuD_max(funcoes, posicaoOrigem);
     }
 
     private static Double[] getCaminha(Double[] posicaoOrigem, double passo, int i, int j) {

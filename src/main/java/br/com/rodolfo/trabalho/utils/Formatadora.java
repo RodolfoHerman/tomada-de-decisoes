@@ -66,6 +66,13 @@ public class Formatadora {
                 
             break;
 
+            case SOLUCOES_UNICAS:
+
+                List<Map<String,Double[]>> solucoesUnicas = (List<Map<String,Double[]>>) object;
+                resp.append(getTextoSolucao("Soluções únicas extraídas do passo anterior.", solucoesUnicas));
+                
+            break;
+
             case PAYOFF:
 
                 List<Matriz> listaMatrizesPayoff = (List<Matriz>) object;
