@@ -20,11 +20,12 @@ import br.com.rodolfo.trabalho.utils.Formatadora;
 import br.com.rodolfo.trabalho.utils.ImpressaoTipo;
 import br.com.rodolfo.trabalho.utils.Metodos;
 import it.ssc.pl.milp.GoalType;
+import javafx.concurrent.Task;
 
 /**
  * JOEL
  */
-public class JOEL implements Execute {
+public class JOEL extends Task<Void> {
 
     private final List<Objetivo> objetivos;
     private final List<Restricao> restricoes;
@@ -38,6 +39,12 @@ public class JOEL implements Execute {
     }
 
     @Override
+    protected Void call() throws Exception {
+        
+
+        return null;
+    }
+    
     public String execute() {
         
         StringBuilder imprimir = new StringBuilder();

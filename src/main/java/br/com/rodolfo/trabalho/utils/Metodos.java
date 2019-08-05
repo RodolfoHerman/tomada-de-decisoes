@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -17,6 +18,12 @@ import it.ssc.pl.milp.GoalType;
  */
 public class Metodos {
 
+    private static final Pattern NUMERO = Pattern.compile("^(-?0|-?[1-9]\\d*)(\\.\\d+)?(E\\d+)?$");
+    
+    public static boolean isNumero(String numero) {
+        return numero != null && NUMERO.matcher(numero).matches();
+    }
+    
     public static List<Double> getMaxColunas(double[][] matriz) {
         
         return IntStream.range(0, matriz[0].length).boxed()
