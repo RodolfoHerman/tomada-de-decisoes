@@ -18,6 +18,7 @@ import br.com.rodolfo.trabalho.models.Objetivo;
 import br.com.rodolfo.trabalho.models.Restricao;
 import br.com.rodolfo.trabalho.services.ObjetivoService;
 import br.com.rodolfo.trabalho.services.RestricaoService;
+import br.com.rodolfo.trabalho.utils.Mensagem;
 import br.com.rodolfo.trabalho.utils.Metodos;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -61,6 +62,17 @@ public class TelaController implements Initializable {
     // Services
     private ObjetivoService objetivoService;
     private RestricaoService restricaoService;
+    // Informações
+    public final String INF_AUTOR = "Desenvolvido por Rodolfo Herman Lara e Silva, "
+                + "mestrando em Engenharia Elétrica (2018) e integrante do Laboratório de Análise e Tratamento de Imagens (LATIM) "
+                + "na Pontifícia Universidade Católica de Minas Gerais (PUC Minas). "
+                + "Recebeu o título de Bacharel em Ciência da Computação pela PUC Minas em 2016."
+                + "\n\nE-mail : ciencia.rodolfo@gmail.com\nLinkedin : https://br.linkedin.com/in/rodolfoherman";
+
+    public final String INF_PROG = "Este programa é uma implementação do artigo : \nOn multicriteria decision"
+            + "making under conditions of uncertainty\n\nAutores: \nPereira Jr, J.\nEkel, P.\nPalhasres, R\nParreiras, R.\n\n"
+            + "Implementação feita por : Rodolfo Herman Lara e Silva\n"
+            + "E-mail : ciencia.rodolfo@gmail.com";
 
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -201,6 +213,18 @@ public class TelaController implements Initializable {
 
         Platform.exit();
         System.exit(0);
+    }
+
+    @FXML
+    public void mostrarInformacaoAutor() {
+        
+        Mensagem.mostrarInformacao("Sobre o autor", "Informações do autor", this.INF_AUTOR);
+    }
+
+    @FXML
+    public void mostrarInformacaoPrograma() {
+        
+        Mensagem.mostrarInformacao("Sobre o programa", "Informações do programa", this.INF_PROG);
     }
 
 

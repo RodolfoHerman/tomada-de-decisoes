@@ -188,10 +188,10 @@ public class FuncaoObjetivo {
 
     public String simplexResolucao() {
         
-        String min = "min = [" + Stream.of(x_min).map(coeficiente -> coeficiente.toString()).collect(Collectors.joining(", ")) + "] = " + z_min; 
-        String max = "max = [" + Stream.of(x_max).map(coeficiente -> coeficiente.toString()).collect(Collectors.joining(", ")) + "] = " + z_max;
+        String min = "min : [" + Stream.of(x_min).map(coeficiente -> coeficiente.toString()).collect(Collectors.joining(", ")) + "] = " + z_min; 
+        String max = "max : [" + Stream.of(x_max).map(coeficiente -> coeficiente.toString()).collect(Collectors.joining(", ")) + "] = " + z_max;
 
-        return String.join(System.lineSeparator(), min, max);
+        return String.join(System.lineSeparator(), toString(), min, max);
     }
     
 }
