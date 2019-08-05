@@ -14,11 +14,13 @@ import it.ssc.pl.milp.ConsType;
  */
 public class Solucao {
     
-    private final double[] limites;
+    private final double[] LIMITES;
+    private final double PASSOS;
 
-    public Solucao(List<Restricao> restricoes) {
+    public Solucao(List<Restricao> restricoes, double passos) {
 
-        this.limites = restricoes.stream().filter(restricao -> !restricao.transformarSinal().equals(ConsType.EQ)).mapToDouble(restricao -> restricao.getValor()).toArray();
+        this.LIMITES = restricoes.stream().filter(restricao -> !restricao.transformarSinal().equals(ConsType.EQ)).mapToDouble(restricao -> restricao.getValor()).toArray();
+        this.PASSOS  = passos;
     }
     
     public Map<String,Double[]> getSolucao(List<FuncaoObjetivo> funcoes) throws Exception {
@@ -36,7 +38,7 @@ public class Solucao {
         for(FuncaoObjetivo funcao : funcoes) {
 
             Double[] posicaoInicial = funcao.getX_max();
-            Double[] valores = HeuristicaRelogio.executar(funcoes, posicaoInicial, limites, 0.395);
+            Double[] valores = HeuristicaRelogio.executar(funcoes, posicaoInicial, this.LIMITES, this.PASSOS);
 
             Double temp = getMuD(funcoes, valores, true);
 

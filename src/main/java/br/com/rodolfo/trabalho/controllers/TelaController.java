@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import br.com.rodolfo.trabalho.StartApp;
@@ -90,16 +91,39 @@ public class TelaController implements Initializable {
     @FXML
     public void btnAnalisarAction() {
         
+        this.textArea.clear();
         validarCampos();
 
         if(this.ERROS.isEmpty()) {
 
-            resetar();
             this.btnAnalisar.setDisable(true);
-            
-            JOEL joel = new JOEL(7, objetivos, restricoes);
 
-            this.textArea.setText(joel.execute());
+            double hurwicz = Double.valueOf(this.hurwiczTextField.getText().replaceAll(",", "."));
+            double passos  = Double.valueOf(this.passosTextField.getText().replaceAll(",", "."));
+            int cenarios   = Double.valueOf(this.cenariosTexteField.getText().replaceAll(",", ".")).intValue();
+            
+            JOEL joel = new JOEL(hurwicz, passos, cenarios, objetivos, restricoes);
+
+            this.barraProgresso.progressProperty().bind(joel.progressProperty());
+
+            joel.setOnSucceeded(Event -> {
+
+                resetar();
+
+                try {
+
+                    this.textArea.setText(joel.get());
+
+                } catch (InterruptedException | ExecutionException e) {
+                 
+                    this.textArea.setText("Erro ao processar. Entrar em contato com o desenvolvedor!");
+				}
+
+            });
+
+            Thread thread = new Thread(joel);
+            thread.setDaemon(true);
+            thread.start();
 
         } else {
 

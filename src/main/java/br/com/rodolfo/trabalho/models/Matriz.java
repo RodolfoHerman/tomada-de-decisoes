@@ -18,15 +18,17 @@ import it.ssc.pl.milp.GoalType;
 public class Matriz {
 
     private final String descricao;
+    private final double hurwicz;
     private final List<FuncaoObjetivo> funcoesObjetivo;
     private final List<Double[]> solucoes;
     private final GoalType tipo;
     private final double[][] payoff;
     private final List<List<Double>> criteriosDeEscolha;
 
-    public Matriz(String descricao, List<FuncaoObjetivo> funcoesObjetivo, List<Double[]> solucoes) {
+    public Matriz(String descricao, double hurwicz, List<FuncaoObjetivo> funcoesObjetivo, List<Double[]> solucoes) {
 
         this.descricao = descricao;
+        this.hurwicz = hurwicz;
         this.funcoesObjetivo = funcoesObjetivo;
         this.solucoes = solucoes;
         this.tipo = funcoesObjetivo.get(0).getTipo();
@@ -161,7 +163,7 @@ public class Matriz {
 
             DoubleSummaryStatistics sumario =  DoubleStream.of(row).boxed().collect(Collectors.summarizingDouble(Double::doubleValue));
 
-            return (new BigDecimal(((0.75 * sumario.getMax()) + (0.25 * sumario.getMin())))).setScale(4, RoundingMode.HALF_UP).doubleValue();
+            return (new BigDecimal(((this.hurwicz * sumario.getMax()) + ((1.0 - this.hurwicz) * sumario.getMin())))).setScale(4, RoundingMode.HALF_UP).doubleValue();
         }).collect(Collectors.toList());
     }
 }

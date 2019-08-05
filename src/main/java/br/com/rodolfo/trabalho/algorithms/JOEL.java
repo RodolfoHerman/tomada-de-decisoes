@@ -5,8 +5,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -25,41 +27,51 @@ import javafx.concurrent.Task;
 /**
  * JOEL
  */
-public class JOEL extends Task<Void> {
+public class JOEL extends Task<String> {
 
     private final List<Objetivo> objetivos;
     private final List<Restricao> restricoes;
-    private final int cenarios;
+    private final double HURWICZ;
+    private final double PASSOS;
+    private final int CENARIOS;
 
-    public JOEL(int cenarios, List<Objetivo> objetivos, List<Restricao> restricoes) {
+    public JOEL(double hurwicz, double passos, int cenarios, List<Objetivo> objetivos, List<Restricao> restricoes) {
 
-        this.cenarios   = cenarios; 
+        this.HURWICZ    = hurwicz;
+        this.PASSOS     = passos;
+        this.CENARIOS   = cenarios; 
         this.objetivos  = objetivos;
         this.restricoes = restricoes;
     }
 
     @Override
-    protected Void call() throws Exception {
-        
-
-        return null;
-    }
-    
-    public String execute() {
+    protected String call() throws Exception {
         
         StringBuilder imprimir = new StringBuilder();
-
         int tamanhoParticao = restricoes.get(0).getCoeficientes().length;
+        int[] progresso  = {1, 2, 3, 4, 5, 6, 6};
+        int maxProgresso = progresso.length;
+        int andamento    = 0;
+
         double[][] estadosNatureza = representarEstadosDaNatureza();
         List<GoalType> listaDeTipos = getListaDeTipos();
+        updateProgress(progresso[andamento++], maxProgresso);
+
         List<List<FuncaoObjetivo>> problemasMultiobjetivo = criarProblemasMultiobjetivo(estadosNatureza, tamanhoParticao, listaDeTipos);
+        updateProgress(progresso[andamento++], maxProgresso);
+
         List<Map<String,Double[]>> solucoes = criarSolucoes(problemasMultiobjetivo);
+        updateProgress(progresso[andamento++], maxProgresso);
+
         Map<String,List<FuncaoObjetivo>> mapaFuncoes = extrairFuncoesObjetivos(problemasMultiobjetivo);
         List<Map<String,Double[]>> solucoesUnicas = extrairSolucoesUnicas(solucoes);
         List<Double[]> solucoesExtraidas = extrairSolucoes(solucoesUnicas);
+        updateProgress(progresso[andamento++], maxProgresso);
+
         List<Matriz> listaMatrizes = mapaFuncoes.entrySet().stream().map(entry -> {
-            return new Matriz(entry.getKey(), entry.getValue(), solucoesExtraidas);
+            return new Matriz(entry.getKey(), this.HURWICZ, entry.getValue(), solucoesExtraidas);
         }).collect(Collectors.toList());
+        updateProgress(progresso[andamento++], maxProgresso);
 
         imprimir.append(Formatadora.getTexto(restricoes, ImpressaoTipo.RESTRICAO));
         imprimir.append(Formatadora.getTexto(objetivos, ImpressaoTipo.OBJETIVOS));
@@ -71,7 +83,9 @@ public class JOEL extends Task<Void> {
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA));
         imprimir.append(Formatadora.getTexto(listaMatrizes, ImpressaoTipo.CRITERIOS_ESCOLHA_MOD));
         imprimir.append(Formatadora.getTexto(criarMatrizAgregada(listaMatrizes), ImpressaoTipo.MATRIZ_AGREGADA));
+        updateProgress(maxProgresso, maxProgresso);
 
+        Thread.sleep(300);
 
         return imprimir.toString();
     }
@@ -116,20 +130,25 @@ public class JOEL extends Task<Void> {
     
     public List<Map<String,Double[]>> extrairSolucoesUnicas(List<Map<String,Double[]>> solucoes) {
         
+        Set<Integer> hashes = new HashSet<>();
+        List<Map<String,Double[]>> solucoesUnicas = new ArrayList<>();
+        
+        solucoes.stream().forEach(solucao -> {
+
+            int hash = Arrays.hashCode(solucao.entrySet().stream().map(entry -> entry.getValue()).findFirst().get());
+
+            if(!hashes.contains(hash)) {
+
+                solucoesUnicas.add(solucao);
+            }
+
+            hashes.add(hash);
+        });
+        
+        return solucoesUnicas;
         // solucoes.stream().flatMap(elemento ->
         //         elemento.entrySet().stream().map(Map.Entry::getValue)
         //     ).collect(Collectors.toMap(el -> Arrays.hashCode(el), el -> el, (val1, val2) -> val1));
-        
-        Map<Integer,Map<String,Double[]>> solucoesUnicas = new HashMap<>();
-
-        for(Map<String,Double[]> solucao : solucoes) {
-
-            Double[] t = solucao.entrySet().stream().map(entry -> entry.getValue()).findFirst().get();
-
-            solucoesUnicas.put(Arrays.hashCode(t), solucao);
-        }
-
-        return solucoesUnicas.entrySet().stream().map(entry -> entry.getValue()).collect(Collectors.toList());
     }
     
     private List<Double[]> extrairSolucoes(List<Map<String,Double[]>> solucoes) {
@@ -165,7 +184,7 @@ public class JOEL extends Task<Void> {
 
     private List<Map<String,Double[]>> criarSolucoes(List<List<FuncaoObjetivo>> problemasMultiobjetivo) {
         
-        Solucao solucao = new Solucao(this.restricoes);
+        Solucao solucao = new Solucao(this.restricoes, this.PASSOS);
 
         return problemasMultiobjetivo.stream().map(problemas -> {
 
@@ -212,8 +231,8 @@ public class JOEL extends Task<Void> {
     private double[][] representarEstadosDaNatureza() {
         
         int dimensao = getDimensaoSobol();
-        double[][] sobol  = (new Sobol()).generate((cenarios + 1), dimensao);
-        double[][] estadosDaNatureza = new double[cenarios][dimensao];
+        double[][] sobol  = (new Sobol()).generate((this.CENARIOS + 1), dimensao);
+        double[][] estadosDaNatureza = new double[this.CENARIOS][dimensao];
 
         List<Double[]> intervaloCoeficientes = objetivos.stream()
             .flatMap(objetivo -> objetivo.getIntervalos_coeficientes()
@@ -230,7 +249,7 @@ public class JOEL extends Task<Void> {
         // {0.0590000000000000,	0.529000000000000,	0.176000000000000,	0.176000000000000,	0.0590000000000000,	28.7500000000000,	66.2500000000000,	61.2500000000000,	91.2500000000000,	48.7500000000000,	0,	34.3750000000000,	262.500000000000,	112.500000000000,	0,	0.198750000000000,	0.273750000000000,	0.251250000000000,	0.0850000000000000,	0.145000000000000},
         // {0.0590000000000000,	0.529000000000000,	0.176000000000000,	0.176000000000000,	0.0590000000000000,	23.7500000000000,	71.2500000000000,	56.2500000000000,	96.2500000000000,	43.7500000000000,	0,	26.8750000000000,	312.500000000000,	142.500000000000,	0,	0.353750000000000,	0.158750000000000,	0.426250000000000,	0.145000000000000,	0.0850000000000000}};
 
-        for(int x = 0; x < cenarios; x++) {
+        for(int x = 0; x < this.CENARIOS; x++) {
             for(int y = 0; y < dimensao; y++) {
 
                 estadosDaNatureza[x][y] = cacularInterpolacao(intervaloCoeficientes.get(y), sobol[x+1][y]);
