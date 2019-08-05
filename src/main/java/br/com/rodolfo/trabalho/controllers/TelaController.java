@@ -22,6 +22,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 
 /**
@@ -34,6 +35,15 @@ public class TelaController implements Initializable {
 
     @FXML
     private Button btnAnalisar;
+
+    @FXML
+    private TextField hurwiczTextField;
+    
+    @FXML
+    private TextField cenariosTexteField;
+    
+    @FXML
+    private TextField passosTextField;
 
     // Variaveis locais
     private DirectoryChooser directoryChooser;

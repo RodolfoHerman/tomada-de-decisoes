@@ -1,5 +1,16 @@
 .button {
     -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-color: rgb(30, 229, 255)
+}
+
+.button:hover {
+    -fx-background-color: aqua;
+}
+
+.text, .text_field {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
 }
 
 #textArea {
