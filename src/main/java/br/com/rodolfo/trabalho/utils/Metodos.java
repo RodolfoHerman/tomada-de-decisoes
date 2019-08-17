@@ -11,6 +11,7 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import br.com.rodolfo.trabalho.models.FuncaoObjetivo;
 import it.ssc.pl.milp.GoalType;
 
 /**
@@ -105,6 +106,13 @@ public class Metodos {
         return ((new BigDecimal(numero))
             .setScale(4, RoundingMode.HALF_UP))
             .doubleValue();
+    }
+
+    public static Double getMu_D(List<FuncaoObjetivo> funcoes, Double[] coeficientesX, boolean max) {
+
+        List<Double> valores = funcoes.stream().map(funcao -> funcao.calcularMu(coeficientesX)).collect(Collectors.toList());
+
+        return max ? valores.stream().min(Double::compareTo).orElse(0.0) : valores.stream().max(Double::compareTo).orElse(1.0);
     }
 
     private Metodos() {}

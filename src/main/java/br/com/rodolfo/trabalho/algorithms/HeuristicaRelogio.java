@@ -1,9 +1,9 @@
 package br.com.rodolfo.trabalho.algorithms;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import br.com.rodolfo.trabalho.models.FuncaoObjetivo;
+import br.com.rodolfo.trabalho.utils.Metodos;
 
 /**
  * HeuristicaRelogio
@@ -22,21 +22,9 @@ public class HeuristicaRelogio {
         return (posicao + passo) <= limite;
     }
 
-    private static Double getMuD_max(List<FuncaoObjetivo> funcoes, Double[] coeficientesX) {
-        
-        List<Double> muD = new ArrayList<>();
-
-        for(FuncaoObjetivo funcao : funcoes) {
-
-            muD.add(funcao.calcularMu(coeficientesX));
-        }
-
-        return muD.stream().min(Double::compareTo).orElse(0.0);
-    }
-
     private static boolean isPassoMelhor(List<FuncaoObjetivo> funcoes, Double[] posicaoOrigem, Double[] posicaoDestino) {
         
-        return getMuD_max(funcoes, posicaoDestino) > getMuD_max(funcoes, posicaoOrigem);
+        return Metodos.getMu_D(funcoes, posicaoDestino, true) > Metodos.getMu_D(funcoes, posicaoOrigem, true);
     }
 
     private static Double[] getCaminha(Double[] posicaoOrigem, double passo, int i, int j) {

@@ -1,12 +1,12 @@
 package br.com.rodolfo.trabalho.models;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import br.com.rodolfo.trabalho.algorithms.HeuristicaRelogio;
+import br.com.rodolfo.trabalho.utils.Metodos;
 import it.ssc.pl.milp.ConsType;
 
 /**
@@ -40,7 +40,7 @@ public class Solucao {
             Double[] posicaoInicial = funcao.getX_max();
             Double[] valores = HeuristicaRelogio.executar(funcoes, posicaoInicial, this.LIMITES, this.PASSOS);
 
-            Double temp = getMuD(funcoes, valores, true);
+            Double temp = Metodos.getMu_D(funcoes, valores, true);
 
             if(temp > muD) {
 
@@ -52,18 +52,6 @@ public class Solucao {
         resposta.put(criarRespostaTextual(funcoes), coeficientes);
 
         return resposta;
-    }
-
-    private Double getMuD(List<FuncaoObjetivo> funcoes, Double[] coeficientesX, boolean max) {
-        
-        List<Double> muD = new ArrayList<>();
-
-        for(FuncaoObjetivo funcao : funcoes) {
-
-            muD.add(funcao.calcularMu(coeficientesX));
-        }
-
-        return max ? muD.stream().min(Double::compareTo).orElse(0.0) : muD.stream().max(Double::compareTo).orElse(1.0);
     }
 
     private String criarRespostaTextual(List<FuncaoObjetivo> funcoes) {
