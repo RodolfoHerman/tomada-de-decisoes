@@ -1,0 +1,101 @@
+[
+    {
+        "descricao": "Restrição 1",
+        "coeficientes": [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+        ],
+        "sinal": ">=",
+        "valor": 1.0
+    },
+    {
+        "descricao": "Restrição 2",
+        "coeficientes": [
+            0.45,
+            0.76,
+            0.87,
+            1.42
+        ],
+        "sinal": "<=",
+        "valor": 0.85
+    },
+    {
+        "descricao": "Restrição 3",
+        "coeficientes": [
+            23.31,
+            22.20,
+            33.77,
+            28.61
+        ],
+        "sinal": "<=",
+        "valor": 30.80
+    },
+    {
+        "descricao": "Restrição 4",
+        "coeficientes": [
+            1.20,
+            1.20,
+            0.94,
+            0.73
+        ],
+        "sinal": "<=",
+        "valor": 1.2
+    },
+    {
+        "descricao": "Restrição 5",
+        "coeficientes": [
+            10.88,
+            15.53,
+            7.98,
+            8.23
+        ],
+        "sinal": "<=",
+        "valor": 16.5
+    },
+    {
+        "descricao": "Restrição 6",
+        "coeficientes": [
+            0.45,
+            0.76,
+            0.87,
+            1.42
+        ],
+        "sinal": ">=",
+        "valor": 0.0
+    },
+    {
+        "descricao": "Restrição 7",
+        "coeficientes": [
+            23.31,
+            22.20,
+            33.77,
+            28.61
+        ],
+        "sinal": ">=",
+        "valor": 25.0
+    },
+    {
+        "descricao": "Restrição 8",
+        "coeficientes": [
+            1.20,
+            1.20,
+            0.94,
+            0.73
+        ],
+        "sinal": ">=",
+        "valor": 1.1
+    },
+    {
+        "descricao": "Restrição 9",
+        "coeficientes": [
+            10.88,
+            15.53,
+            7.98,
+            8.23
+        ],
+        "sinal": ">=",
+        "valor": 8.5
+    }
+]

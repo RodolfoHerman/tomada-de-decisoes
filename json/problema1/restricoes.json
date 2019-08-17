@@ -1,0 +1,42 @@
+[
+    {
+        "descricao": "Restrição 1",
+        "coeficientes": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "sinal": "=",
+        "valor": 30.0
+    },
+    {
+        "descricao": "Restrição 2",
+        "coeficientes": [
+            1.0,
+            0.0,
+            0.0
+        ],
+        "sinal": "<=",
+        "valor": 10.0
+    },
+    {
+        "descricao": "Restrição 3",
+        "coeficientes": [
+            0.0,
+            1.0,
+            0.0
+        ],
+        "sinal": "<=",
+        "valor": 12.0
+    },
+    {
+        "descricao": "Restrição 4",
+        "coeficientes": [
+            0.0,
+            0.0,
+            1.0
+        ],
+        "sinal": "<=",
+        "valor": 14.0
+    }
+]

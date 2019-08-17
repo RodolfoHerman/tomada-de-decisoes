@@ -1,0 +1,44 @@
+[
+    {
+        "descricao": "Objetivo F1",
+        "maximizar": "não",
+        "intervalos_coeficientes": [
+            {
+                "coeficiente": "X1",
+                "lower_c": 2.70,
+                "upper_c": 3.30
+            },
+            {
+                "coeficiente": "X2",
+                "lower_c": 11.70,
+                "upper_c": 14.30
+            },
+            {
+                "coeficiente": "X3",
+                "lower_c": 7.20,
+                "upper_c": 8.80
+            }
+        ]
+    },
+    {
+        "descricao": "Objetivo F2",
+        "maximizar": "não",
+        "intervalos_coeficientes": [
+            {
+                "coeficiente": "X1",
+                "lower_c": 5.40,
+                "upper_c": 6.60
+            },
+            {
+                "coeficiente": "X2",
+                "lower_c": 3.60,
+                "upper_c": 4.40
+            },
+            {
+                "coeficiente": "X3",
+                "lower_c": 4.50,
+                "upper_c": 5.50
+            }
+        ]
+    }
+]

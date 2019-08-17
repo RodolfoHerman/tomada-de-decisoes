@@ -1,0 +1,54 @@
+[
+    {
+        "descricao": "Custo da mistura.",
+        "maximizar": "não",
+        "intervalos_coeficientes": [
+            {
+                "coeficiente": "X1",
+                "lower_c": 49.35,
+                "upper_c": 73.35
+            },
+            {
+                "coeficiente": "X2",
+                "lower_c": 48.05,
+                "upper_c": 76.05
+            },
+            {
+                "coeficiente": "X3",
+                "lower_c": 50.00,
+                "upper_c": 70.00
+            },
+            {
+                "coeficiente": "X4",
+                "lower_c": 47.13,
+                "upper_c": 63.13
+            }
+        ]
+    },
+    {
+        "descricao": "Consumo de água em litros para cada 100Kg. de carvão.",
+        "maximizar": "não",
+        "intervalos_coeficientes": [
+            {
+                "coeficiente": "X1",
+                "lower_c": 28.75,
+                "upper_c": 38.75
+            },
+            {
+                "coeficiente": "X2",
+                "lower_c": 24.08,
+                "upper_c": 30.08
+            },
+            {
+                "coeficiente": "X3",
+                "lower_c": 22.20,
+                "upper_c": 36.20
+            },
+            {
+                "coeficiente": "X4",
+                "lower_c": 19.50,
+                "upper_c": 37.50
+            }
+        ]
+    }
+]

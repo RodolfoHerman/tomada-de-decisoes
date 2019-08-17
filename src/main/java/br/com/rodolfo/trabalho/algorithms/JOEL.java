@@ -182,21 +182,29 @@ public class JOEL extends Task<String> {
         return mapaObjetivos;
     }
 
-    private List<Map<String,Double[]>> criarSolucoes(List<List<FuncaoObjetivo>> problemasMultiobjetivo) {
+    private List<Map<String,Double[]>> criarSolucoes(List<List<FuncaoObjetivo>> problemasMultiobjetivo)
+            throws Exception {
         
         Solucao solucao = new Solucao(this.restricoes, this.PASSOS);
+        List<Map<String,Double[]>> resp = new ArrayList<>();
+        
+        for(List<FuncaoObjetivo> problemas: problemasMultiobjetivo) {
 
-        return problemasMultiobjetivo.stream().map(problemas -> {
+            resp.add(solucao.getSolucao(problemas));
+        }
+        
+        return resp;
+        // return problemasMultiobjetivo.stream().map(problemas -> {
 
-            try {
+        //     try {
 
-                return solucao.getSolucao(problemas);
+        //         return solucao.getSolucao(problemas);
 
-            } catch (Exception e) {
+        //     } catch (Exception e) {
                 
-                return null;
-            }
-        }).collect(Collectors.toList());
+        //         return null;
+        //     }
+        // }).collect(Collectors.toList());
     }
 
     private List<List<FuncaoObjetivo>> criarProblemasMultiobjetivo(double[][] estadosDaNatureza, int tamanhoParticao, List<GoalType> listaDeTipos) {
