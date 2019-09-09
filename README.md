@@ -114,20 +114,26 @@ O critério de Laplace utiliza a estimativa ![exp47](http://latex.codecogs.com/p
 <br/>
 O critério de Savage está associado com uso da estimativa ![exp50](http://latex.codecogs.com/png.latex?R^{max}(X_{k})) e permite a escolha da alternativa de solução ![exp51](http://latex.codecogs.com/png.latex?X^{S}) que minimiza essa estimativa:
 
-![exp52](http://latex.codecogs.com/png.latex?\underset{1%20\leq%20k%20\leq%20K}{\min}R^{max}(X_k)%20=%20\underset{1%20\leq%20k%20\leq%20K}{min{}}\underset{1%20\leq%20s%20\leq%20S}{max{}}R(X_k,Y_s)\hspace{40pt}(12))
+![exp52](http://latex.codecogs.com/png.latex?\underset{1%20\leq%20k%20\leq%20K}{\min}R^{max}(X_k)%20=%20\underset{1%20\leq%20k%20\leq%20K}{min{}}\underset{1%20\leq%20s%20\leq%20S}{max{}}R(X_k,Y_s)\hspace{40pt}(13))
+<br/>
 <br/>
 onde ![exp50](http://latex.codecogs.com/png.latex?R(X_k,Y_s)) é calculado na forma:
-
-![exp53](http://latex.codecogs.com/png.latex?R(X_k,Y_s)%20=%20F(X_k,Y_s)%20-%20F^{min}(Y_s)\hspace{40pt}(13))
+<br/>
+<br/>
+![exp53](http://latex.codecogs.com/png.latex?R(X_k,Y_s)%20=%20F(X_k,Y_s)%20-%20F^{min}(Y_s)\hspace{40pt}(14))
+<br/>
 <br/>
 para funções objetivos a serem minimizadas e
-![exp54](http://latex.codecogs.com/png.latex?R(X_k,Y_s)%20=%20F^{max}(Y_s)%20-%20F(X_k,Y_s)\hspace{40pt}(14))
+<br/>
+<br/>
+![exp54](http://latex.codecogs.com/png.latex?R(X_k,Y_s)%20=%20F^{max}(Y_s)%20-%20F(X_k,Y_s)\hspace{40pt}(15))
+<br/>
 <br/>
 para funções objetivos a serem maximizadas. Os valores ![exp55](http://latex.codecogs.com/png.latex?F^{min}(Y_s)$%20e%20$F^{max}(Y_s)) representam o menor e maior valores da coluna *s*, respectivamente.
 
 O critério de Hurwicz utiliza a combinação linear das estimativas ![exp56](http://latex.codecogs.com/png.latex?F^{min}(X_k)) e ![exp57](http://latex.codecogs.com/png.latex?F^{max}(X_k)) (o menor e maior valores da linha *k*, respectivamente) e permite escolher a alternativa de solução ![exp58](http://latex.codecogs.com/png.latex?X^H) que minimiza essa combinação:
 
-![exp59](http://latex.codecogs.com/png.latex?\underset{1%20\leq%20k%20\leq%20K}{\min}\bigg[\alpha^{max}(X_k)%20+%20(1%20-%20\alpha)F^{min}(X_k)\bigg]%20=%20\underset{1%20\leq%20k%20\leq%20K}{\min}\bigg[\alpha\underset{1%20\leq%20s%20\leq%20S}{\max}F(X_k,Y_s)%20+%20(1%20-%20\alpha)\underset{1%20\leq%20s%20\leq%20S}{\min}F(X_k,Y_s)\bigg]\hspace{40pt}(14))
+![exp59](http://latex.codecogs.com/png.latex?\underset{1%20\leq%20k%20\leq%20K}{\min}\bigg[\alpha^{max}(X_k)%20+%20(1%20-%20\alpha)F^{min}(X_k)\bigg]%20=%20\underset{1%20\leq%20k%20\leq%20K}{\min}\bigg[\alpha\underset{1%20\leq%20s%20\leq%20S}{\max}F(X_k,Y_s)%20+%20(1%20-%20\alpha)\underset{1%20\leq%20s%20\leq%20S}{\min}F(X_k,Y_s)\bigg])
 <br/>
 onde ![exp60](http://latex.codecogs.com/png.latex?\alpha%20\in%20[0,1]) é o índice de "pessimismo-otimismo" definido pelo Tomador de Decisões e que por padrão é ajustado em 0,75.
 
