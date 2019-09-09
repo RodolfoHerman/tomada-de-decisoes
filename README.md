@@ -133,7 +133,7 @@ para funções objetivos a serem maximizadas. Os valores ![exp55](http://latex.c
 
 O critério de Hurwicz utiliza a combinação linear das estimativas ![exp56](http://latex.codecogs.com/png.latex?F^{min}(X_k)) e ![exp57](http://latex.codecogs.com/png.latex?F^{max}(X_k)) (o menor e maior valores da linha *k*, respectivamente) e permite escolher a alternativa de solução ![exp58](http://latex.codecogs.com/png.latex?X^H) que minimiza essa combinação:
 
-![exp59](http://latex.codecogs.com/png.latex?\underset{1%20\leq%20k%20\leq%20K}{\min}\bigg[\alpha^{max}(X_k)%20+%20(1%20-%20\alpha)F^{min}(X_k)\bigg]%20=%20\underset{1%20\leq%20k%20\leq%20K}{\min}\bigg[\alpha\underset{1%20\leq%20s%20\leq%20S}{\max}F(X_k,Y_s)%20+%20(1%20-%20\alpha)\underset{1%20\leq%20s%20\leq%20S}{\min}F(X_k,Y_s)\bigg])
+![exp59](http://latex.codecogs.com/png.latex?\underset{1%20\leq%20k%20\leq%20K}{\min}\bigg[\alpha^{max}(X_k)%20+%20(1%20-%20\alpha)F^{min}(X_k)\bigg]%20=%20\underset{1%20\leq%20k%20\leq%20K}{\min}\bigg[\alpha\underset{1%20\leq%20s%20\leq%20S}{\max}F(X_k,Y_s)%20+%20(1%20-%20\alpha)\underset{1%20\leq%20s%20\leq%20S}{\min}F(X_k,Y_s)\bigg]\hspace{40pt}(16))
 <br/>
 onde ![exp60](http://latex.codecogs.com/png.latex?\alpha%20\in%20[0,1]) é o índice de "pessimismo-otimismo" definido pelo Tomador de Decisões e que por padrão é ajustado em 0,75.
 
@@ -251,7 +251,10 @@ Pro fim, no programa, basta ir na aba **Arquivo** depois **Abrir** e selecionar 
 
 ----
 
-[1] EKEL, P. Y.; MARTINI, J.; PALHARES, R. M. Multicriteria analysis in decision makingunder information uncertainty.Applied Mathematics and Computation, Elsevier, v. 200,n. 2, p. 501–516, 2008. 
+[1] EKEL, P. Y.; MARTINI, J.; PALHARES, R. M. Multicriteria analysis in decision makingunder information uncertainty.Applied Mathematics and Computation, Elsevier, v. 200,n. 2, p. 501–516, 2008.
+<br/>
 [2] JR, J. P.; EKEL, P. Y.; PALHARES, R. M.; PARREIRAS, R. O. On multicriteria decisionmaking under conditions of uncertainty.Information Sciences, Elsevier, v. 324, p. 44–59,2015.
+<br/>
 [3] RAMALHO, F. D.; EKEL, P. Y.; PEDRYCZ, W.; JÚNIOR, J. G. P.; SOARES, G. L.Multicriteria decision making under conditions of uncertainty in application tomultiobjective allocation of resources.Information Fusion, Elsevier, v. 49, p. 249–261,2019. 
+<br/>
 [4] SOBOL’, I. On the systematic search in a hypercube.SIAM Journal on NumericalAnalysis, SIAM, v. 16, n. 5, p. 790–793, 1979.
