@@ -12,8 +12,10 @@ Para o deploy é necssário realizar a instalação do simplex através do Maven
 Após isso, o arquivo .jar de dependência do simplex será instalado em seu repositório local e será reconhecido pelo gerenciamento do Maven no **pom.xml** da aplicação.
 
 
-Obs1: o simplex utilizado no projeto se encontra no site [http://www.ssclab.org/en/download.html](http://www.ssclab.org/en/download.html).
-OBS2: é necessário possuir o java de versão 11 ou superior instalada [https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
+**OBS1:** o simplex utilizado no projeto se encontra no site [http://www.ssclab.org/en/download.html](http://www.ssclab.org/en/download.html).
+<br/>
+<br/>
+**OBS2:** é necessário possuir o java de versão 11 ou superior instalada [https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html).
 
 ## Metodologia
 
